@@ -22,7 +22,15 @@ public class Play extends ElementObj{
      *                     同时按上和下 怎么办？ 后按的会重置先按的
      * @
      */
+    private boolean right=false;
     private boolean left=false;
+
+    private boolean directionRight = true;
+    private boolean squat=false;
+
+    private boolean useGun=true;
+
+    private boolean jump=false;
 
     //图片集合，使用map村粗，枚举类型配合移动（拓展）
 
@@ -48,27 +56,34 @@ public class Play extends ElementObj{
         if(bl){
             switch (key){
                 case 37:
+                    directionRight = false;
                     this.right=false;
                     this.left=true;
 //                    this.fx=Direction.left;
+                    switchState();
                     break;
                 case 38:
-                    this.down=false;
-                    this.up=true;
+                    this.squat=false;
+                    this.jump=true;
+                    switchState();
 //                    this.fx=Direction.up;
                     break;
                 case 39:
+                    directionRight = true;
                     this.left=false;
                     this.right=true;
+                    switchState();
 //                    this.fx=Direction.right;
                     break;
                 case 40:
-                    this.up=false;
-                    this.down = true;
+                    if(!jump)
+                        this.squat=true;
 //                    this.fx=Direction.down;
+                    switchState();
                     break;
                 case 32:
                     this.pkType=true;
+                    switchState();
                     break;
             }
         }else {
@@ -77,19 +92,54 @@ public class Play extends ElementObj{
                     this.left=false;
                     break;
                 case 38:
-                    this.up=false;
+//                    this.up=false;
                     break;
                 case 39:
                     this.right=false;
                     break;
                 case 40:
-                    this.down=false;
+                    this.squat=false;
                     break;
                 case 32:
                     this.pkType=false;
                     break;
             }
         }
+    }
+    private void switchState(){
+        if(directionRight && useGun && pkType)
+            this.upState = Action.fire_handgun_right_upper;
+        if(directionRight && useGun && !pkType)
+            this.upState = Action.unfire_handgun_right_upper;
+        if(directionRight && useGun && jump)
+            this.upState = Action.jump_handgun_right_upper;
+        if(directionRight && !jump && right)
+            this.lowState = Action.run_right_lower;
+        if(directionRight && !jump && !right)
+            this.lowState = Action.stand_right_lower;
+        if(directionRight && jump)
+            this.lowState = Action.jump_right_lower;
+        if(directionRight && squat && right)
+            this.lowState = Action.squat_right_lower;
+        if(directionRight && squat && !right)
+            this.lowState = Action.squatStand_right_lower;
+
+        if(!directionRight && useGun && pkType)
+            this.upState = Action.fire_handgun_left_upper;
+        if(!directionRight && useGun && !pkType)
+            this.upState = Action.unfire_handgun_left_upper;
+        if(!directionRight && useGun && jump)
+            this.upState = Action.jump_handgun_left_upper;
+        if(!directionRight && !jump && left)
+            this.lowState = Action.run_left_lower;
+        if(!directionRight && !jump && !left)
+            this.lowState = Action.stand_left_lower;
+        if(!directionRight && jump)
+            this.lowState = Action.jump_left_lower;
+        if(!directionRight && squat && left)
+            this.lowState = Action.squat_left_lower;
+        if(!directionRight && squat && !left)
+            this.lowState = Action.squatStand_left_lower;
     }
     @Override
     public void move(long gameTime){
@@ -98,22 +148,22 @@ public class Play extends ElementObj{
 
         if(this.left && curX>0)
             this.setX(curX-10);
-        if(this.up && curY>0)
-            this.setY(curY-10);
+//        if(this.up && curY>0)
+//            this.setY(curY-10);
         if(this.right && curX< GameJFrame.contentWidth-this.getIcon().getIconWidth())
             this.setX(curX+10);
-        if(this.down && curY < GameJFrame.contentHeight-this.getIcon().getIconHeight())
-            this.setY(curY+10);
+//        if(this.down && curY < GameJFrame.contentHeight-this.getIcon().getIconHeight())
+//            this.setY(curY+10);
         // 撞墙则不走
-        ElementManager em=ElementManager.getManager();
-        List<ElementObj> maps =  em.getElementsByKey(GameElement.MAPS);
-        for(ElementObj i:maps){
-            if(i.pk(this)){
-                this.setX(curX);
-                this.setY(curY);
-                return;
-            }
-        }
+//        ElementManager em=ElementManager.getManager();
+//        List<ElementObj> maps =  em.getElementsByKey(GameElement.MAPS);
+//        for(ElementObj i:maps){
+//            if(i.pk(this)){
+//                this.setX(curX);
+//                this.setY(curY);
+//                return;
+//            }
+//        }
     }
     @Override
     public void bePk(GameElement tar){
@@ -146,7 +196,8 @@ public class Play extends ElementObj{
         this.setX(new Integer(split[0]));
         this.setY(new Integer(split[1]));
         List<ImageIcon> icon = GameLoad.imgMaps.get(ImgState.valueOf(split[2]));
-        this.fx = Direction.valueOf(split[2].split("_")[0]);
+        this.upState = Action.valueOf(split[2].split("_")[0]);
+        this.lowState = Action.valueOf(split[2].split("_")[0]);
 //        this.setW(icon.getIconWidth());
 //        this.setH(icon.getIconHeight());
         this.setW(20);
@@ -159,22 +210,22 @@ public class Play extends ElementObj{
     public String toString(){
         int tx = this.getX();
         int ty = this.getY();
-        switch (this.fx){
-            case up:
-                tx += this.getW()/2;
-                break;
-            case down:
-                ty += this.getH();
-                tx += this.getW()/2;
-                break;
-            case left:
-                ty += this.getH()/2;
-                break;
-            case right:
-                tx += this.getW();
-                ty += this.getH()/2;
-                break;
-        }
-        return "x:"+tx+",y:"+ty+",fx:"+this.fx.name();
+//        switch (this.fx){
+//            case up:
+//                tx += this.getW()/2;
+//                break;
+//            case down:
+//                ty += this.getH();
+//                tx += this.getW()/2;
+//                break;
+//            case left:
+//                ty += this.getH()/2;
+//                break;
+//            case right:
+//                tx += this.getW();
+//                ty += this.getH()/2;
+//                break;
+//        }
+        return "x:"+tx+",y:"+ty+",upState:"+this.upState.name()+",lowState:"+this.lowState.name();
     }
 }
