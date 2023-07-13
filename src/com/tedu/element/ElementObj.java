@@ -86,14 +86,14 @@ public abstract class ElementObj {
      */
     public final void model(long gameTime){
 //        先换装
-        updateImage();
+        updateImage(gameTime);
 //        再移动
-
         move(gameTime);
 //        再发射
         add();
     }
-    protected void updateImage(){}
+    protected void updateImage(long gametime){}
+
     protected void add(){}
     public ElementObj createElement(String str){
         return null;

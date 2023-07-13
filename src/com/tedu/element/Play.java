@@ -186,7 +186,7 @@ public class Play extends ElementObj{
         ElementManager.getManager().addElement(element, GameElement.PLAYFIRE);
     }
     @Override
-    protected void updateImage(){
+    protected void updateImage(long gameTime){
 //        this.setIcon(GameLoad.imgMaps.get(ImgState.valueOf(fx.toString()));
     }
 

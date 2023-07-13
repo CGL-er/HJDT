@@ -109,7 +109,7 @@ public class GameLoad {
     public static ElementObj getObj(String str){
         try{
             Class<?> class1 = objMap.get(str);
-            System.out.println(class1);
+//            System.out.println(class1);
             Object newInstance = class1.newInstance();
             if(newInstance instanceof ElementObj){
                 return (ElementObj)newInstance;
@@ -138,6 +138,29 @@ public class GameLoad {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void loadEnemy(int stage) {
+//        String texturl = "com/tedu/text/game"+stage+".pro";
+        String texturl = "com/tedu/text/game1"+".pro";
+        ClassLoader classLoader = GameLoad.class.getClassLoader();
+        InputStream texts = classLoader.getResourceAsStream(texturl);
+        pro.clear();
+        try{
+            pro.load(texts);
+            Set<Object> set = pro.keySet();
+            for(Object o:set){
+                String url = pro.getProperty(o.toString());
+                String tclass = o.toString().split("_")[0];
+
+                ElementObj obj = getObj(tclass).createElement(url);
+                em.addElement(obj, GameElement.valueOf(tclass));
+            }
+            ElementObj panel = new Panel(0);
+            em.addElement(panel, GameElement.PANEL);
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 
