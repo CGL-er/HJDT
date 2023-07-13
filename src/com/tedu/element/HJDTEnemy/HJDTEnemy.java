@@ -226,7 +226,6 @@ public class HJDTEnemy extends ElementObj {
                 changeDirection();
             }
         }
-        this.setLive(false);
     }
 
     @Override
