@@ -317,7 +317,7 @@ public class Play extends ElementObj{
         this.lowLen = GameLoad.imgMaps.get(lowState).size();
         this.setUpIcon(GameLoad.imgMaps.get(upState).get(0));
         this.setLowIcon(GameLoad.imgMaps.get(lowState).get(0));
-        this.setHp(50);
+        this.setHp(100);
         this.setMaxHp(100);
         return this;
     }
