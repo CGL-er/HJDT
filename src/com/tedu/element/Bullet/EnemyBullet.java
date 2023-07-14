@@ -45,9 +45,11 @@ public class EnemyBullet extends ElementObj {
                     if(split1[1].equals("GUN")){
                         this.type = EnemyType.GUN;
                         this.setIcon(new ImageIcon("Image/bullet/bomb1.png"));
+                        this.attack = 2;
                     }else if(split1[1].equals("ROCKET_GUN")){
                         this.type = EnemyType.ROCKET_GUN;
                         this.setIcon(new ImageIcon("Image/bullet/bullet30.png"));
+                        this.attack = 3;
                     }
                     break;
             }
