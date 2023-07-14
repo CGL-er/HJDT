@@ -33,7 +33,7 @@ public class PlayFile extends ElementObj{
                     break;
                 case "upState":
                     String weapen = split2[1].split("_")[1];
-                    this.setIcon(new ImageIcon("image/images/子弹/bullet01.png"));
+                    this.setIcon(new ImageIcon("image/bullet/bullet01.png"));
                     break;
                 case "fx":
 //                    System.out.println("----");

@@ -131,7 +131,9 @@ public class GameThread extends Thread{
         GameLoad.loadObj();
         GameLoad.loadImg();
         GameLoad.MapLoad(stage);
-        GameLoad.loadPlay(stage);
+//        GameLoad.loadPlay(stage);
+        GameLoad.loadEnemy(stage);
+
     }
 
 }

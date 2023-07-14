@@ -88,12 +88,12 @@ public abstract class ElementObj {
 //        先换装
         updateImage(gameTime);
 //        再移动
-
         move(gameTime);
 //        再发射
         add();
     }
     protected void updateImage(long gameTime){}
+
     protected void add(){}
     public ElementObj createElement(String str){
         return null;

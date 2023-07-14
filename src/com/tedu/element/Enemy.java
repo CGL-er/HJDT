@@ -32,7 +32,7 @@ public class Enemy extends ElementObj{
     }
     @Override
     public void bePk(GameElement tar){
-        System.out.println(this.getHp());
+//        System.out.println(this.getHp());
 
         if(tar==GameElement.PLAYFIRE){
             this.setHp(this.getHp()-new PlayFile().getAttack());

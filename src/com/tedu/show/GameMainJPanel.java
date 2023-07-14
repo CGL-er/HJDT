@@ -56,7 +56,7 @@ public class GameMainJPanel extends JPanel implements Runnable{
         while (true){
             this.repaint();
             try {
-                Thread.sleep(17);
+                Thread.sleep(10);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }

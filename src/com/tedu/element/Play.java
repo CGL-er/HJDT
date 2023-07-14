@@ -282,11 +282,12 @@ public class Play extends ElementObj{
     private int curIndex = 0;
     @Override
     protected void updateImage(long gameTime){
-        if(gameTime-curTime>6){
-            this.setUpIcon(GameLoad.imgMaps.get(upState).get((++curIndex)%upLen));
-            this.setLowIcon(GameLoad.imgMaps.get(lowState).get((curIndex)%lowLen));
-            curTime = gameTime;
-        }
+    if(gameTime-curTime>6){
+        this.setUpIcon(GameLoad.imgMaps.get(upState).get((++curIndex)%upLen));
+        this.setLowIcon(GameLoad.imgMaps.get(lowState).get((curIndex)%lowLen));
+        curTime = gameTime;
+    }
+
     }
 
     @Override

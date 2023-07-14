@@ -32,6 +32,14 @@ public class GameJFrame extends JFrame {
     public GameJFrame(){
         init();
     }
+
+    public static boolean OutBoard(int x, int y) {
+        if (x < 0 || x > GameX || y < 0 || y > GameY) {
+            return true;
+        }
+        return false;
+    }
+
     public void init(){
         this.setSize(GameX, GameY);
         this.setTitle("干翻腾讯");
