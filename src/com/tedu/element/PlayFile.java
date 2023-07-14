@@ -22,8 +22,6 @@ public class PlayFile extends ElementObj{
     @Override
     public ElementObj createElement(String str){
         String[] split = str.split(",");
-        this.setW(10);
-        this.setH(10);
         for (String str1:split){
             String[] split2=str1.split(":");
             switch (split2[0]){
@@ -33,11 +31,18 @@ public class PlayFile extends ElementObj{
                 case "y":
                     this.setY(Integer.parseInt(split2[1])-this.getH()/2);
                     break;
-                case "fx":
-                    this.fx= Direction.valueOf(split2[1]);
+                case "upState":
+                    String weapen = split2[1].split("_")[1];
+                    this.setIcon(new ImageIcon("image/images/子弹/bullet01.png"));
                     break;
+                case "fx":
+//                    System.out.println("----");
+//                    System.out.println(split2[1]);
+                    this.fx = Direction.valueOf(split2[1]);
             }
         }
+        this.setW(this.getIcon().getIconWidth());
+        this.setH(this.getIcon().getIconHeight());
 
 
         this.moveNum = 15;
@@ -46,9 +51,7 @@ public class PlayFile extends ElementObj{
     }
     @Override
     public void showElement(Graphics g){
-        g.setColor(Color.red);
-
-        g.fillOval(this.getX(), this.getY(), this.getW(), this.getH());
+        g.drawImage(getIcon().getImage(), getX(), getY(), getW(), getH(), null);
 
     }
     @Override
@@ -64,7 +67,7 @@ public class PlayFile extends ElementObj{
     }
     @Override
     protected void move(long gameTime){
-        if(this.getX()<0 || this.getX()> GameJFrame.GameX || this.getY()<0 || this.getY()>GameJFrame.GameY){
+        if(this.getX()<0 || this.getX()> GameJFrame.contentWidth || this.getY()<0 || this.getY()>GameJFrame.contentHeight){
             this.setLive(false);
             return;
         }

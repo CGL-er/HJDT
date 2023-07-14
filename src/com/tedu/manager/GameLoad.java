@@ -42,7 +42,7 @@ public class GameLoad {
             throw new RuntimeException(e);
         }
         ElementObj element = new MapBg().createElement(Maps.get("backimage1").toString());
-        em.addElement(element, GameElement.MAPS);
+        em.addElement(element, GameElement.MAPBG);
     }
     public static void loadImg() {
         String texturl = "com/tedu/text/ImgSrc.pro";
@@ -54,8 +54,10 @@ public class GameLoad {
             Set<Object> set = pro.keySet();
             for(Object o:set){
                 String url = pro.getProperty(o.toString());
-
+                System.out.println(o);
                 imgMaps.put(Action.valueOf(o.toString()), loadImagesFromFolder(url));
+                System.out.println(o);
+                System.out.println(loadImagesFromFolder(url));
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -72,8 +74,8 @@ public class GameLoad {
                 Arrays.sort(files, Comparator.comparing(File::getName));
                 for (File file : files) {
                     if (file.isFile()) {
-                        ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
-                        imageIcon.setDescription(file.getName()); // 设置图片文件名作为描述
+                        String path = folderPath+"/"+file.getName();
+                        ImageIcon imageIcon = new ImageIcon(path);
                         imageList.add(imageIcon);
                     }
                 }
@@ -105,6 +107,7 @@ public class GameLoad {
             e.printStackTrace();
         }
     }
+
     private static Map<String, Class<?>> objMap = new HashMap<>();
     public static ElementObj getObj(String str){
         try{

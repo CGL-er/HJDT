@@ -39,7 +39,7 @@ public class GameThread extends Thread{
 //        游戏场景结束 游戏资源回收（场景资源）
             gameOver();
             try {
-                sleep(50);
+                sleep(10);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
@@ -87,7 +87,7 @@ public class GameThread extends Thread{
 //                System.out.println(stage);
 //            }
             try {
-                sleep(50);
+                sleep(10);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
@@ -131,8 +131,7 @@ public class GameThread extends Thread{
         GameLoad.loadObj();
         GameLoad.loadImg();
         GameLoad.MapLoad(stage);
-//        GameLoad.loadPlay(stage);
-        System.out.println(em.getElementsByKey(GameElement.ENEMY));
+        GameLoad.loadPlay(stage);
     }
 
 }

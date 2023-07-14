@@ -1,6 +1,1 @@
-ENEMY_1=0,0,down_E1,0,0,0,0
-ENEMY_2=380,280,down_E1,0,0,0,0
-ENEMY_3=720,0,down_E1,0,0,0,0
-ENEMY_4=0,280,down_E1,0,0,0,0
-ENEMY_5=720,280,down_E1,0,0,0,0
-PLAY_1=500,500,up_P1,0,0,0,0
+PLAY_1=100,100,unfire_handgun_right_upper,stand_right_lower

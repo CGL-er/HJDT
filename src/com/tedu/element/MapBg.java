@@ -9,7 +9,12 @@ public class MapBg extends ElementObj {
     @Override
     public void showElement(Graphics g) {
         float imgRt = (float)GameJFrame.contentWidth/GameJFrame.contentHeight;
-        g.drawImage(this.getIcon().getImage(), this.getX(), 0, GameJFrame.contentWidth, GameJFrame.contentHeight, this.getX(), 0, this.getX() + (int)(this.getIcon().getIconHeight()*imgRt), this.getIcon().getIconHeight(), null);
+        g.drawImage(this.getIcon().getImage(),
+                0, 0, GameJFrame.contentWidth,GameJFrame.contentHeight,
+                this.getX(), 0,
+                this.getX() + (int)(this.getIcon().getIconHeight()*imgRt),
+                this.getIcon().getIconHeight(),
+                null);
 
     }
 

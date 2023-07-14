@@ -8,5 +8,5 @@ public enum GameElement {
      * BOSS boss
      * 子弹...
      */
-    MAPS, PLAY, ENEMY, BOSS, PLAYFIRE, DIE, PANEL;
+    MAPBG, MAPS, PLAY, ENEMY, BOSS, PLAYFIRE, DIE, PANEL;
 }
