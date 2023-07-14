@@ -35,7 +35,6 @@ public class Play extends ElementObj{
     private boolean squat=false;
 
     private boolean useGun=true;
-
     private boolean jump=false;
     private boolean noFire = false;
     private int noFireTime = 240;
@@ -93,6 +92,7 @@ public class Play extends ElementObj{
     }
     @Override
     public void keyClick(boolean bl, int key){
+//        System.out.println(key);
         if(bl){
             switch (key){
                 case 37:
@@ -122,6 +122,14 @@ public class Play extends ElementObj{
                         this.pkType=true;
                         switchState();
                     }
+                    break;
+                case 49:
+                    this.useGun = true;
+                    switchState();
+                    break;
+                case 50:
+                    this.useGun = false;
+                    switchState();
                     break;
             }
         }else {
@@ -153,6 +161,12 @@ public class Play extends ElementObj{
             this.upState = Action.unfire_handgun_right_upper;
         if(directionRight && useGun && jump)
             this.upState = Action.jump_handgun_right_upper;
+        if(directionRight && !useGun && pkType)
+            this.upState = Action.fire_bang_right_upper;
+        if(directionRight && !useGun && !pkType)
+            this.upState = Action.unfire_bang_right_upper;
+        if(directionRight && !useGun && jump)
+            this.upState = Action.jump_bang_right_upper;
         if(directionRight && !jump && right)
             this.lowState = Action.run_right_lower;
         if(directionRight && !jump && !right)
@@ -163,15 +177,24 @@ public class Play extends ElementObj{
             this.lowState = Action.squat_right_lower;
         if(directionRight && squat && !right)
             this.lowState = Action.squatStand_right_lower;
-        if(directionRight && pkType && !jump){
+        if(directionRight && pkType && !jump && useGun)
             this.upState = Action.fire_handgun_right_upper;
-        }
+        if(directionRight && pkType && !jump && !useGun)
+            this.upState = Action.fire_bang_right_upper;
+
         if(!directionRight && useGun && pkType)
             this.upState = Action.fire_handgun_left_upper;
         if(!directionRight && useGun && !pkType)
             this.upState = Action.unfire_handgun_left_upper;
         if(!directionRight && useGun && jump)
             this.upState = Action.jump_handgun_left_upper;
+        if(!directionRight && !useGun && pkType)
+            this.upState = Action.fire_bang_left_upper;
+        if(!directionRight && !useGun && !pkType)
+            this.upState = Action.unfire_bang_left_upper;
+        if(!directionRight && !useGun && jump)
+            this.upState = Action.jump_bang_left_upper;
+
         if(!directionRight && !jump && left)
             this.lowState = Action.run_left_lower;
         if(!directionRight && !jump && !left)
@@ -182,9 +205,10 @@ public class Play extends ElementObj{
             this.lowState = Action.squat_left_lower;
         if(!directionRight && squat && !left)
             this.lowState = Action.squatStand_left_lower;
-        if(!directionRight && pkType && !jump){
+        if(!directionRight && pkType && !jump && useGun)
             this.upState = Action.fire_handgun_left_upper;
-        }
+        if(!directionRight && pkType && !jump && !useGun)
+            this.upState = Action.fire_bang_left_upper;
 //        System.out.println(upState);
 //        System.out.println(lowState);
 //        System.out.println(GameLoad.imgMaps.get(upState));
@@ -203,8 +227,12 @@ public class Play extends ElementObj{
             this.setX(curX+speed);
         if(this.right && curX>=GameJFrame.contentWidth*0.4){
             ElementObj tmap = em.getElementsByKey(GameElement.MAPBG).get(0);
-            if (tmap.getX() < tmap.getIcon().getIconWidth()- GameJFrame.contentWidth)
+            if (tmap.getX() < tmap.getIcon().getIconWidth()- GameJFrame.contentWidth){
                 tmap.setX(tmap.getX()+speed);
+                for(ElementObj i:em.getElementsByKey(GameElement.ENEMY)){
+                    i.setX(i.getX()-speed-3);
+                }
+            }
         }
         if(this.jump){
             //可跳高度内
@@ -229,19 +257,6 @@ public class Play extends ElementObj{
                 this.setY(curY-jumpSpeed);
             }
         }
-
-//        if(this.down && curY < GameJFrame.contentHeight-this.getIcon().getIconHeight())
-//            this.setY(curY+10);
-        // 撞墙则不走
-//        ElementManager em=ElementManager.getManager();
-//        List<ElementObj> maps =  em.getElementsByKey(GameElement.MAPS);
-//        for(ElementObj i:maps){
-//            if(i.pk(this)){
-//                this.setX(curX);
-//                this.setY(curY);
-//                return;
-//            }
-//        }
         switchState();
     }
     @Override
@@ -272,7 +287,7 @@ public class Play extends ElementObj{
             }
         };
         // 使用schedule方法指定任务的延迟时间
-        timer.schedule(task, noFireTime); // 1秒后执行
+        timer.schedule(task, noFireTime);
         // 以后的框架学习中会碰到，返回对象的实体毛病初始化数据
         ElementObj element = new PlayFile().createElement(this.toString());
         ElementManager.getManager().addElement(element, GameElement.PLAYFIRE);
@@ -282,12 +297,11 @@ public class Play extends ElementObj{
     private int curIndex = 0;
     @Override
     protected void updateImage(long gameTime){
-    if(gameTime-curTime>6){
-        this.setUpIcon(GameLoad.imgMaps.get(upState).get((++curIndex)%upLen));
-        this.setLowIcon(GameLoad.imgMaps.get(lowState).get((curIndex)%lowLen));
-        curTime = gameTime;
-    }
-
+        if(gameTime-curTime>6){
+            this.setUpIcon(GameLoad.imgMaps.get(upState).get((++curIndex)%upLen));
+            this.setLowIcon(GameLoad.imgMaps.get(lowState).get((curIndex)%lowLen));
+            curTime = gameTime;
+        }
     }
 
     @Override
@@ -299,16 +313,12 @@ public class Play extends ElementObj{
         this.setY(groundHeight-getH());
         this.upState = Action.valueOf(split[2]);
         this.lowState = Action.valueOf(split[3]);
-//        this.setW(icon.getIconWidth());
-//        this.setH(icon.getIconHeight());
         this.upLen = GameLoad.imgMaps.get(upState).size();
         this.lowLen = GameLoad.imgMaps.get(lowState).size();
-//        System.out.println(GameLoad.imgMaps.get(upState));
-//        System.out.println(GameLoad.imgMaps.get(lowState));
         this.setUpIcon(GameLoad.imgMaps.get(upState).get(0));
         this.setLowIcon(GameLoad.imgMaps.get(lowState).get(0));
-//        System.out.println(getUpIcon());
-//        System.out.println(getLowIcon());
+        this.setHp(50);
+        this.setMaxHp(100);
         return this;
     }
 

@@ -21,7 +21,7 @@ public abstract class ElementObj {
 
 //    还有各种必要的状态值
     private int hp;
-
+    private int maxHp;
     public ElementObj(){ // 此构造无作用，只是为了继承无作用而写
 
     }
@@ -156,5 +156,13 @@ public abstract class ElementObj {
 
     public void setHp(int hp) {
         this.hp = hp;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
     }
 }

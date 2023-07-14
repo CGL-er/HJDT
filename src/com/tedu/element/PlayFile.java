@@ -15,6 +15,8 @@ import java.awt.*;
 public class PlayFile extends ElementObj{
     private int attack = 1; //攻击力
     private int moveNum;
+
+    private boolean isGun;
     private Direction fx;
     public PlayFile(){}
 
@@ -33,7 +35,22 @@ public class PlayFile extends ElementObj{
                     break;
                 case "upState":
                     String weapen = split2[1].split("_")[1];
-                    this.setIcon(new ImageIcon("image/bullet/bullet01.png"));
+                    String direction = split2[1].split("_")[2];
+                    if(weapen.equals("handgun")){
+                        isGun=true;
+                        if(direction.equals("right"))
+                            this.setIcon(new ImageIcon("image/bullet/bullet01.png"));
+                        else
+                            this.setIcon(new ImageIcon("image/bullet/bullet00.png"));
+                    }
+                    else{
+                        isGun=false;
+                        if(direction.equals("right"))
+                            this.setIcon(new ImageIcon("image/bullet/bullet41.png"));
+                        else
+                            this.setIcon(new ImageIcon("image/bullet/bullet40.png"));
+                    }
+
                     break;
                 case "fx":
 //                    System.out.println("----");
@@ -45,14 +62,13 @@ public class PlayFile extends ElementObj{
         this.setH(this.getIcon().getIconHeight());
 
 
-        this.moveNum = 15;
+        this.moveNum = 8;
         this.setAttack(1);
         return this;
     }
     @Override
     public void showElement(Graphics g){
         g.drawImage(getIcon().getImage(), getX(), getY(), getW(), getH(), null);
-
     }
     @Override
     public void die(){
@@ -60,10 +76,19 @@ public class PlayFile extends ElementObj{
 //        ImageIcon icon = new ImageIcon("image/tank/play2/player2_left.png");
 //        ElementObj obj = new Play(this.getX(), this.getY(), 50, 50, icon);
 //        em.addElement(obj, GameElement.DIE);
+        if (isGun){
+            setLive(false);
+            return;
+        }
+        ElementObj bang = new fireBang().createElement(this.toString());
+        ElementManager em=ElementManager.getManager();
+        em.addElement(bang, GameElement.DIE);
+        setLive(false);
+
     }
     @Override
     public void bePk(GameElement tar){
-         setLive(false);
+        die();
     }
     @Override
     protected void move(long gameTime){
@@ -86,6 +111,11 @@ public class PlayFile extends ElementObj{
                 break;
 
         }
+    }
+
+    @Override
+    public String toString() {
+        return "x:"+getX()+",y:"+(getY()-50)+",isGun:"+this.isGun+",fx:"+this.fx.name();
     }
 
     public int getAttack() {
