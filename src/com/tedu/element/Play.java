@@ -24,7 +24,7 @@ public class Play extends ElementObj{
      * @
      */
     private int speed=3;
-    private int groundHeight=400;
+    private int groundHeight=435;
     private int jumpSpeed = 5;
     private int jumpHeight = 150;
 
