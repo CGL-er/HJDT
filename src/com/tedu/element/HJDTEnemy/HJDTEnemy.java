@@ -166,7 +166,7 @@ public class HJDTEnemy extends ElementObj {
     @Override
     protected void updateImage(long gametime) {
         changeStatus();
-        if(gametime - myLiveTime > 10 || gametime == 0L){
+        if(gametime - myLiveTime > 10){
             myLiveTime = gametime;
             List<ImageIcon> icons = EnemyMap.get(this.getType()).get(this.getStatus());
             curIconIndex = (curIconIndex + 1) % icons.size();
