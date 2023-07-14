@@ -4,12 +4,13 @@ import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 import com.tedu.manager.GameLoad;
 import com.tedu.show.GameJFrame;
+import com.tedu.show.GameMainJPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.Timer;
 
 public class Play extends ElementObj{
     /**
@@ -22,6 +23,11 @@ public class Play extends ElementObj{
      *                     同时按上和下 怎么办？ 后按的会重置先按的
      * @
      */
+    private int speed=3;
+    private int groundHeight=435;
+    private int jumpSpeed = 5;
+    private int jumpHeight = 150;
+
     private boolean right=false;
     private boolean left=false;
 
@@ -31,12 +37,19 @@ public class Play extends ElementObj{
     private boolean useGun=true;
 
     private boolean jump=false;
+    private boolean noFire = false;
+    private int noFireTime = 240;
 
-    //图片集合，使用map村粗，枚举类型配合移动（拓展）
+    private ImageIcon upIcon;
+    private ImageIcon lowIcon;
 
+    private int upLen;
+    private int lowLen;
     private Action upState;
     private Action lowState;
     private boolean pkType=false;
+    ElementManager em = ElementManager.getManager();
+
     public Play(int x, int y, int w, int h, ImageIcon icon) {
         super(x, y, w, h, icon);
     }
@@ -47,9 +60,36 @@ public class Play extends ElementObj{
 
     @Override
     public void showElement(Graphics g){
-        g.drawImage(this.getIcon().getImage(),
-                this.getX(), this.getY(),
-                this.getH(), this.getW(), null);
+//        System.out.println(this.getUpIcon());
+//        System.out.println(this.getLowIcon());
+        int uxbia = 0;
+        int uybia = 0;
+        int lxbia = 0;
+        int lybia = 0;
+        if(noFire && !directionRight){
+            uxbia=getW()-this.getUpIcon().getIconWidth();
+        }
+        if(!squat && !jump){
+            uybia=7;
+            setH(150);
+        }
+        if(squat){
+            uybia=20;
+            setH(130);
+        }
+        if(!directionRight){
+            lxbia=46;
+            if(jump){
+                uxbia=40;
+            }
+        }else
+            lxbia=5;
+        g.drawImage(this.getUpIcon().getImage(),
+                this.getX()+uxbia, this.getY()+uybia,
+                this.getUpIcon().getIconWidth(), this.getUpIcon().getIconHeight(), null);
+        g.drawImage(this.getLowIcon().getImage(),
+                this.getX()+lxbia, this.getY()+this.getUpIcon().getIconHeight()+lybia,
+                this.getLowIcon().getIconWidth(), this.getLowIcon().getIconHeight(), null);
     }
     @Override
     public void keyClick(boolean bl, int key){
@@ -59,31 +99,29 @@ public class Play extends ElementObj{
                     directionRight = false;
                     this.right=false;
                     this.left=true;
-//                    this.fx=Direction.left;
                     switchState();
                     break;
                 case 38:
                     this.squat=false;
                     this.jump=true;
                     switchState();
-//                    this.fx=Direction.up;
                     break;
                 case 39:
                     directionRight = true;
                     this.left=false;
                     this.right=true;
                     switchState();
-//                    this.fx=Direction.right;
                     break;
                 case 40:
                     if(!jump)
                         this.squat=true;
-//                    this.fx=Direction.down;
                     switchState();
                     break;
                 case 32:
-                    this.pkType=true;
-                    switchState();
+                    if (!noFire){
+                        this.pkType=true;
+                        switchState();
+                    }
                     break;
             }
         }else {
@@ -101,11 +139,13 @@ public class Play extends ElementObj{
                     this.squat=false;
                     break;
                 case 32:
-                    this.pkType=false;
+//                    this.pkType=false;
                     break;
             }
+            switchState();
         }
     }
+    private long jumpTime;
     private void switchState(){
         if(directionRight && useGun && pkType)
             this.upState = Action.fire_handgun_right_upper;
@@ -123,7 +163,9 @@ public class Play extends ElementObj{
             this.lowState = Action.squat_right_lower;
         if(directionRight && squat && !right)
             this.lowState = Action.squatStand_right_lower;
-
+        if(directionRight && pkType && !jump){
+            this.upState = Action.fire_handgun_right_upper;
+        }
         if(!directionRight && useGun && pkType)
             this.upState = Action.fire_handgun_left_upper;
         if(!directionRight && useGun && !pkType)
@@ -140,6 +182,15 @@ public class Play extends ElementObj{
             this.lowState = Action.squat_left_lower;
         if(!directionRight && squat && !left)
             this.lowState = Action.squatStand_left_lower;
+        if(!directionRight && pkType && !jump){
+            this.upState = Action.fire_handgun_left_upper;
+        }
+//        System.out.println(upState);
+//        System.out.println(lowState);
+//        System.out.println(GameLoad.imgMaps.get(upState));
+//        System.out.println(GameLoad.imgMaps.get(lowState));
+        this.upLen = GameLoad.imgMaps.get(upState).size();
+        this.lowLen = GameLoad.imgMaps.get(lowState).size();
     }
     @Override
     public void move(long gameTime){
@@ -147,11 +198,38 @@ public class Play extends ElementObj{
         int curY = this.getY();
 
         if(this.left && curX>0)
-            this.setX(curX-10);
-//        if(this.up && curY>0)
-//            this.setY(curY-10);
-        if(this.right && curX< GameJFrame.contentWidth-this.getIcon().getIconWidth())
-            this.setX(curX+10);
+            this.setX(curX-speed);
+        if(this.right && curX< GameJFrame.contentWidth*0.4)
+            this.setX(curX+speed);
+        if(this.right && curX>=GameJFrame.contentWidth*0.4){
+            ElementObj tmap = em.getElementsByKey(GameElement.MAPBG).get(0);
+            if (tmap.getX() < tmap.getIcon().getIconWidth()- GameJFrame.contentWidth)
+                tmap.setX(tmap.getX()+speed);
+        }
+        if(this.jump){
+            //可跳高度内
+            if(curY > groundHeight-getH()-jumpHeight && curY < groundHeight-getH()){
+                this.setY(curY-jumpSpeed);
+            //站在地板的时候
+            }else if(curY==groundHeight-getH()){
+                if(jumpSpeed<0){
+                    this.jump = false;
+                    jumpSpeed = Math.abs(jumpSpeed);
+                }else {
+                    this.setY(curY-jumpSpeed);
+                }
+            //低过地板的时候
+            }else if(curY>groundHeight-getH()){
+                this.jump = false;
+                jumpSpeed = Math.abs(jumpSpeed);
+                this.setY(groundHeight-getH());
+            //高过跳跃高度时
+            }else {
+                jumpSpeed = -jumpSpeed;
+                this.setY(curY-jumpSpeed);
+            }
+        }
+
 //        if(this.down && curY < GameJFrame.contentHeight-this.getIcon().getIconHeight())
 //            this.setY(curY+10);
         // 撞墙则不走
@@ -164,6 +242,7 @@ public class Play extends ElementObj{
 //                return;
 //            }
 //        }
+        switchState();
     }
     @Override
     public void bePk(GameElement tar){
@@ -178,54 +257,91 @@ public class Play extends ElementObj{
      */
     @Override
     protected void add(){
-        if(!this.pkType){ // 如果不是发射状态，返回
+        if(!this.pkType || noFire){ // 如果不是发射状态，返回
             return;
         }
+        curIndex = -1;
+
+        noFire = true;
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                noFire = false;
+                pkType = false;
+            }
+        };
+        // 使用schedule方法指定任务的延迟时间
+        timer.schedule(task, noFireTime); // 1秒后执行
         // 以后的框架学习中会碰到，返回对象的实体毛病初始化数据
         ElementObj element = new PlayFile().createElement(this.toString());
         ElementManager.getManager().addElement(element, GameElement.PLAYFIRE);
+
     }
+    private long curTime = 0;
+    private int curIndex = 0;
     @Override
     protected void updateImage(long gameTime){
-//        this.setIcon(GameLoad.imgMaps.get(ImgState.valueOf(fx.toString()));
+    if(gameTime-curTime>6){
+        this.setUpIcon(GameLoad.imgMaps.get(upState).get((++curIndex)%upLen));
+        this.setLowIcon(GameLoad.imgMaps.get(lowState).get((curIndex)%lowLen));
+        curTime = gameTime;
+    }
+
     }
 
     @Override
     public ElementObj createElement(String str) {
         String[] split = str.split(",");
+        this.setW(85);
+        this.setH(150);
         this.setX(new Integer(split[0]));
-        this.setY(new Integer(split[1]));
-        List<ImageIcon> icon = GameLoad.imgMaps.get(ImgState.valueOf(split[2]));
-        this.upState = Action.valueOf(split[2].split("_")[0]);
-        this.lowState = Action.valueOf(split[2].split("_")[0]);
+        this.setY(groundHeight-getH());
+        this.upState = Action.valueOf(split[2]);
+        this.lowState = Action.valueOf(split[3]);
 //        this.setW(icon.getIconWidth());
 //        this.setH(icon.getIconHeight());
-        this.setW(20);
-        this.setH(20);
-//        this.setIcon(icon);
+        this.upLen = GameLoad.imgMaps.get(upState).size();
+        this.lowLen = GameLoad.imgMaps.get(lowState).size();
+//        System.out.println(GameLoad.imgMaps.get(upState));
+//        System.out.println(GameLoad.imgMaps.get(lowState));
+        this.setUpIcon(GameLoad.imgMaps.get(upState).get(0));
+        this.setLowIcon(GameLoad.imgMaps.get(lowState).get(0));
+//        System.out.println(getUpIcon());
+//        System.out.println(getLowIcon());
         return this;
     }
 
     @Override
     public String toString(){
         int tx = this.getX();
-        int ty = this.getY();
-//        switch (this.fx){
-//            case up:
-//                tx += this.getW()/2;
-//                break;
-//            case down:
-//                ty += this.getH();
-//                tx += this.getW()/2;
-//                break;
-//            case left:
-//                ty += this.getH()/2;
-//                break;
-//            case right:
-//                tx += this.getW();
-//                ty += this.getH()/2;
-//                break;
-//        }
-        return "x:"+tx+",y:"+ty+",upState:"+this.upState.name()+",lowState:"+this.lowState.name();
+        int ty = this.getY()+18;
+        if(squat){
+            ty=ty+20;
+        }
+        String direction;
+        if(directionRight){
+            tx+=85;
+            direction = "right";
+        }
+        else
+            direction = "left";
+        return "x:"+tx+",y:"+ty+",upState:"+this.upState.name()+",lowState:"+this.lowState.name()+",fx:"+direction;
+    }
+
+    public ImageIcon getUpIcon() {
+        return upIcon;
+    }
+
+    public void setUpIcon(ImageIcon upIcon) {
+        this.upIcon = upIcon;
+    }
+
+    public ImageIcon getLowIcon() {
+        return lowIcon;
+    }
+
+    public void setLowIcon(ImageIcon lowIcon) {
+        this.lowIcon = lowIcon;
     }
 }

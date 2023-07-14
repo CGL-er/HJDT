@@ -133,7 +133,7 @@ public class GameThread extends Thread{
         GameLoad.MapLoad(stage);
 //        GameLoad.loadPlay(stage);
         GameLoad.loadEnemy(stage);
-//        System.out.println(em.getElementsByKey(GameElement.ENEMY));
+
     }
 
 }

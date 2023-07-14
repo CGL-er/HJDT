@@ -92,7 +92,7 @@ public abstract class ElementObj {
 //        再发射
         add();
     }
-    protected void updateImage(long gametime){}
+    protected void updateImage(long gameTime){}
 
     protected void add(){}
     public ElementObj createElement(String str){
