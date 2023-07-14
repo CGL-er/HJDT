@@ -23,3 +23,6 @@ squatStand_right_lower=image/plays/right/squat_stand/lowerBody
 stand_right_lower=image/plays/right/stand/lowerBody
 unfire_bang_right_upper=image/plays/right/unfire/bang/upperBody
 unfire_handgun_right_upper=image/plays/right/unfire/handgun/upperBody
+
+showFire_bang_left=image/plays/fire/bang/left
+showFire_bang_right=image/plays/fire/bang/right
