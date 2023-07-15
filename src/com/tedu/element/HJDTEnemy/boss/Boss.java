@@ -104,8 +104,8 @@ public class Boss extends ElementObj {
     @Override
     public void bePk(GameElement tar, ElementObj b) {
         if(tar == GameElement.PLAYFIRE || tar == GameElement.DIEFIRE){
-            System.out.println("boss be pk");
-            System.out.println(tar);
+//            System.out.println("boss be pk");
+//            System.out.println(tar);
             this.setHp(this.getHp()-b.getAttack());
         }
         if(this.getHp()<=0){

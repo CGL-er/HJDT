@@ -188,7 +188,7 @@ public class Enemy extends ElementObj{
         this.sign = split[2].split("_")[1];
         if(split[3].equals("0")){
             this.speed = 0;
-            System.out.println("sepp");
+//            System.out.println("sepp");
         }
 //        this.setW(icon.getIconWidth());
 //        this.setH(icon.getIconHeight());

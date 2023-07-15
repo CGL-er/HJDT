@@ -2,6 +2,8 @@ package com.tedu.controller;
 
 import com.tedu.element.*;
 import com.tedu.element.HJDTEnemy.boss.Boss;
+import com.tedu.element.HJDTEnemy.plane.plane;
+import com.tedu.element.older.older;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 import com.tedu.manager.GameLoad;
@@ -141,7 +143,9 @@ public class GameThread extends Thread{
         GameLoad.MapLoad(stage);
 //        GameLoad.loadPlay(stage);
         GameLoad.loadEnemy(stage);
-        em.addElement(new Boss().createElement(""), GameElement.BOSS);
+//        em.addElement(new Boss().createElement(""), GameElement.BOSS);
+//        em.addElement(new plane().createElement(""), GameElement.ENEMY);
+        em.addElement(new older().createElement(""), GameElement.ODER);
     }
 
 }
