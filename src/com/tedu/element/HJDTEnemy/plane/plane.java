@@ -14,23 +14,30 @@ public class plane extends ElementObj {
     private static ElementManager em = ElementManager.getManager();
     private boolean direction;
     private long liveTime = 0L;
+    private  int live = 0;
     private int shutSpeed = 2;
+    private ImageIcon icon = new ImageIcon("image/Enemy/plane/plane0.png");
     @Override
     public ElementObj createElement(String str) {
-        this.setIcon(new ImageIcon("image/Enemy/plane/plane0.png"));
+        this.direction = Math.random() > 0.5;
+        if(!direction){
+            this.setIcon(flipImage(icon));
+        }else{
+            this.setIcon(icon);
+        }
         this.setW((int) (this.getIcon().getIconWidth() * 0.8));
         this.setH((int) (this.getIcon().getIconHeight() * 0.8));
         this.setX((int)(Math.random()*(GameJFrame.contentWidth-this.getW())));
         this.setY(10);
-        this.direction = Math.random() > 0.5;
-        if(!direction){
-            this.setIcon(flipImage(this.getIcon()));
-        }
+
         return this;
     }
 
     @Override
     protected void updateImage(long gameTime) {
+        if(this.live++>=800){
+            this.setLive(false);
+        }
     }
 
     @Override
@@ -43,11 +50,11 @@ public class plane extends ElementObj {
         if(this.getX()<=0){
             this.setX(0);
             direction = true;
-            this.setIcon(flipImage(this.getIcon()));
+            this.setIcon(icon);
         }else if(this.getX()>=GameJFrame.contentWidth-this.getW()){
             this.setX(GameJFrame.contentWidth-this.getW());
             direction = false;
-            this.setIcon(flipImage(this.getIcon()));
+            this.setIcon(flipImage(icon));
         }
         if(direction){
             this.setX(this.getX()+2);

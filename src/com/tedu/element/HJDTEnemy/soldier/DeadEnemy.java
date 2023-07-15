@@ -50,7 +50,7 @@ public class DeadEnemy extends ElementObj {
         String[] split = type.split(",");
         this.direction = Boolean.parseBoolean(split[0]);
         this.setX(Integer.parseInt(split[1]));
-        this.setY(Integer.parseInt(split[2]));
+        this.setY(Integer.parseInt(split[2])+20);
         this.deadType = DeadType.values()[Integer.parseInt(split[3])];
 
         this.iconList = DeadMap.get(deadType);

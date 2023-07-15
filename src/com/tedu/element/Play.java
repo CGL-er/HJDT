@@ -92,7 +92,7 @@ public class Play extends ElementObj{
         g.drawImage(this.getLowIcon().getImage(),
                 this.getX()+lxbia, this.getY()+this.getUpIcon().getIconHeight()+lybia,
                 this.getLowIcon().getIconWidth(), this.getLowIcon().getIconHeight(), null);
-        g.drawRect(this.getX(), this.getY(), this.getW(), this.getH());
+//        g.drawRect(this.getX(), this.getY(), this.getW(), this.getH());
     }
     @Override
     public void keyClick(boolean bl, int key){
@@ -262,6 +262,9 @@ public class Play extends ElementObj{
             if (tmap.getX() < tmap.getIcon().getIconWidth()- GameJFrame.contentWidth-mapBias){
                 tmap.setX(tmap.getX()+speed);
                 for(ElementObj i:em.getElementsByKey(GameElement.ENEMY)){
+                    i.setX(i.getX()-speed-bias);
+                }
+                for(ElementObj i:em.getElementsByKey(GameElement.ENEMYFIRE)){
                     i.setX(i.getX()-speed-bias);
                 }
                 for(ElementObj i:em.getElementsByKey(GameElement.BOSS)){

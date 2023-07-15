@@ -335,12 +335,12 @@ public class HJDTEnemy extends ElementObj {
             int bx = this.getW() - this.getIcon().getIconWidth();
             int by = this.getH() - this.getIcon().getIconHeight();
             g.drawImage(this.getIcon().getImage(),this.getX(),this.getY()+by,this.getIcon().getIconWidth(),this.getIcon().getIconHeight(),null);
-            g.drawRect(this.getX(),this.getY(),this.getW(),this.getH());
-            // 绘制血条
-            g.setColor(Color.RED);
-            g.fillRect(this.getX(),this.getY()-10,this.getW(),5);
-            g.setColor(Color.GREEN);
-            g.fillRect(this.getX(),this.getY()-10,(int)(this.getW()*this.getHp()/this.getMaxHp()),5);
+//            g.drawRect(this.getX(),this.getY(),this.getW(),this.getH());
+//            // 绘制血条
+//            g.setColor(Color.RED);
+//            g.fillRect(this.getX(),this.getY()-10,this.getW(),5);
+//            g.setColor(Color.GREEN);
+//            g.fillRect(this.getX(),this.getY()-10,(int)(this.getW()*this.getHp()/this.getMaxHp()),5);
 
         }
     }

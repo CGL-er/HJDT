@@ -97,7 +97,9 @@ public class GameThread extends Thread{
      *                              3. 暂停等等。。。
      */
     private void gameRun() {
-        while (!nextStage){ //预览拓展 true可以变为变量，控制关卡结束
+
+        while (!nextStage){
+            //预览拓展 true可以变为变量，控制关卡结束
             Map<GameElement, List<ElementObj>> all = em.getGameElements();
             ElementPK(GameElement.ENEMY, GameElement.PLAYFIRE);
             ElementPK(GameElement.ENEMY, GameElement.DIEFIRE);
@@ -111,7 +113,13 @@ public class GameThread extends Thread{
             ElementPK(GameElement.PLAY, GameElement.BOSS);
 
             moveAndUpdate(all, gameTime); // 游戏元素自动化方法
+            if(gameTime % 1200 == 0){
+                em.addElement(new plane().createElement(""), GameElement.PLANE);
+            }
             gameTime++;
+            System.out.println(gameTime);
+
+
 
             if(em.getElementsByKey(GameElement.PLAY).get(0).getHp() <=0){
                 nextStage=true;
@@ -129,6 +137,8 @@ public class GameThread extends Thread{
             }
         }
         nextStage=false;
+
+
     }
     public void ElementPK(GameElement tarA, GameElement tarB){
         List<ElementObj> listA =  em.getElementsByKey(tarA);
@@ -172,9 +182,6 @@ public class GameThread extends Thread{
 //        GameLoad.loadPlay(stage);
         GameLoad.loadEnemy(stage);
 //        em.addElement(new Boss().createElement(""), GameElement.BOSS);
-//        em.addElement(new plane().createElement(""), GameElement.ENEMY);
-        em.addElement(new older().createElement(""), GameElement.ODER);
-
     }
 
 }

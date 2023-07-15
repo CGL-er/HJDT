@@ -18,7 +18,6 @@ public class fireBang extends ElementObj{
     private Action state;
     private int x;
     private int attack = 1;
-
     public int getAttack() {
         return attack;
     }
@@ -82,7 +81,7 @@ public class fireBang extends ElementObj{
 //            System.out.println(1);
             this.setIcon(GameLoad.imgMaps.get(state).get((++curIndex)%imgLen));
             if(fx == Direction.left){
-                this.setIcon(flipImage(this.getIcon()));
+//                this.setIcon(flipImage(this.getIcon()));
                 this.setX(x-this.getW());
             }
             curTime = gameTime;

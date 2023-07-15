@@ -2,6 +2,7 @@ package com.tedu.element.HJDTEnemy.boss;
 
 import com.tedu.element.ElementObj;
 import com.tedu.element.HJDTEnemy.soldier.DeadType;
+import com.tedu.element.older.older;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 
@@ -76,7 +77,7 @@ public class Boss extends ElementObj {
         this.setHp(500);
         this.setLive(true);
         this.setAttackStatus(true);
-        this.setAttack(0);
+        this.setAttack(10);
         return this;
     }
 
@@ -110,6 +111,7 @@ public class Boss extends ElementObj {
         }
         if(this.getHp()<=0){
             this.setLive(false);
+            em.addElement(new older().createElement(""), GameElement.ODER);
         }
     }
 
@@ -165,7 +167,7 @@ public class Boss extends ElementObj {
             return;
         }
         g.drawImage(this.getIcon().getImage(),this.getX(),this.getY(),this.getW(),this.getH(),null);
-        g.drawRect(this.getX(),this.getY(),this.getW(),this.getH());
+//        g.drawRect(this.getX(),this.getY(),this.getW(),this.getH());
         // 绘制血条
         g.setColor(Color.RED);
         g.fillRect(this.getX(),this.getY()-10,this.getW(),5);
