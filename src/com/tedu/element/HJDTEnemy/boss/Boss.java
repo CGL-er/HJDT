@@ -68,7 +68,7 @@ public class Boss extends ElementObj {
 
     @Override
     public ElementObj createElement(String str) {
-        this.setX(300);
+        this.setX(Integer.parseInt(str));
         this.setY(225);
         this.setW(iconList.get(8).getIconWidth());
         this.setH(iconList.get(8).getIconHeight());
@@ -104,8 +104,8 @@ public class Boss extends ElementObj {
     @Override
     public void bePk(GameElement tar, ElementObj b) {
         if(tar == GameElement.PLAYFIRE || tar == GameElement.DIEFIRE){
-            System.out.println("boss be pk");
-            System.out.println(tar);
+//            System.out.println("boss be pk");
+//            System.out.println(tar);
             this.setHp(this.getHp()-b.getAttack());
         }
         if(this.getHp()<=0){

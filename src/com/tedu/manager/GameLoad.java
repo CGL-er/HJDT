@@ -147,7 +147,7 @@ public class GameLoad {
 
     public static void loadEnemy(int stage) {
 //        String texturl = "com/tedu/text/game"+stage+".pro";
-        String texturl = "com/tedu/text/game1"+".pro";
+        String texturl = "com/tedu/text/game"+stage+".pro";
         ClassLoader classLoader = GameLoad.class.getClassLoader();
         InputStream texts = classLoader.getResourceAsStream(texturl);
         pro.clear();

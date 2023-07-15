@@ -210,7 +210,7 @@ public class HJDTEnemy extends ElementObj {
     @Override
     public void bePk(GameElement tar, ElementObj b){
         if(tar==GameElement.PLAYFIRE || tar==GameElement.DIEFIRE){
-            System.out.println("敌人被攻击"+tar);
+//            System.out.println("敌人被攻击"+tar);
             this.setHp(this.getHp()-b.getAttack());
         }
         if(this.getHp()<=0){
@@ -229,7 +229,7 @@ public class HJDTEnemy extends ElementObj {
     @Override
     public void die() {
         Random random = new Random();
-        this.setLive(false);
+//        this.setLive(false);
         String str = this.direction?"1":"0";
         str += ","+this.getX()+","+this.getY()+"," + random.nextInt(3); //随机死亡类型
         em.addElement(new DeadEnemy().createElement(str),GameElement.DIE);
@@ -249,7 +249,7 @@ public class HJDTEnemy extends ElementObj {
                 this.setAttackStatus(true);
             }
             if(this.curIconIndex < 4 &&this.type == EnemyType.KINEF && this.getAttackStatus()) {
-                System.out.println("切换状态");
+//                System.out.println("切换状态");
                 this.setAttackStatus(false);
             }
 
@@ -320,7 +320,7 @@ public class HJDTEnemy extends ElementObj {
                 }
             }
             if(GameJFrame.OutBoard(this.getX(),this.getY()) || GameJFrame.OutBoard(this.getX()+this.getW(),this.getY())){
-                System.out.println("出界了");
+//                System.out.println("出界了");
                 this.changeDirection();
                 moveDistance = 0;
             }

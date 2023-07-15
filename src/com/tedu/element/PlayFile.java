@@ -14,7 +14,7 @@ import java.awt.*;
 public class PlayFile extends ElementObj{
     private int attack = 1; //攻击力
     private int moveNum;
-
+    private boolean knife = false;
     private boolean isGun;
     private Direction fx;
     public PlayFile(){}
@@ -67,8 +67,37 @@ public class PlayFile extends ElementObj{
 //        this.setAttack(1);
         return this;
     }
+
+    public ElementObj createElementKnife(String str){
+        knife = true;
+        String[] split = str.split(",");
+        for (String str1:split){
+            String[] split2=str1.split(":");
+            switch (split2[0]){
+                case "x":
+                    this.setX(Integer.parseInt(split2[1])-this.getW()/2);
+                    break;
+                case "y":
+                    this.setY(Integer.parseInt(split2[1])-this.getH()/2);
+                    break;
+                case "w":
+                    this.setW(Integer.parseInt(split2[1]));
+                    break;
+                case "h":
+//                    System.out.println("----");
+                    this.setH(Integer.parseInt(split2[1]));
+                break;
+            }
+        }
+        setAttackValue(1);
+        this.moveNum = 0;
+//        this.setAttack(1);
+        return this;
+    }
     @Override
     public void showElement(Graphics g){
+        if(knife)
+            return;
         g.drawImage(getIcon().getImage(), getX(), getY(), getW(), getH(), null);
     }
     @Override
@@ -77,7 +106,7 @@ public class PlayFile extends ElementObj{
 //        ImageIcon icon = new ImageIcon("image/tank/play2/player2_left.png");
 //        ElementObj obj = new Play(this.getX(), this.getY(), 50, 50, icon);
 //        em.addElement(obj, GameElement.DIE);
-        if (isGun){
+        if (isGun || knife){
             setLive(false);
             return;
         }
@@ -93,6 +122,8 @@ public class PlayFile extends ElementObj{
     }
     @Override
     protected void move(long gameTime){
+        if(knife)
+            return;
         if(this.getX()<0 || this.getX()> GameJFrame.contentWidth || this.getY()<0 || this.getY()>GameJFrame.contentHeight){
             this.setLive(false);
             return;

@@ -5,6 +5,7 @@ import com.tedu.element.HJDTEnemy.boss.Boss;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 import com.tedu.manager.GameLoad;
+import com.tedu.show.GameJFrame;
 import com.tedu.show.GameMainJPanel;
 
 import javax.swing.*;
@@ -23,11 +24,15 @@ public class GameThread extends Thread{
     private static boolean nextStage;
 
     private static int stage;
+    private static boolean gameOver = false;
 
     public GameThread(){
         em=ElementManager.getManager();
     }
 
+    public static int getStage() {
+        return stage;
+    }
 
     @Override
     public void run(){ // 游戏的run方法，主线程
@@ -51,20 +56,36 @@ public class GameThread extends Thread{
      * 游戏的加载
      */
     private void gameOver() {
-        if(stage==3)
-            em.addElement(new Pass(stage, true), GameElement.PANEL);
-        else{
-            em.addElement(new Pass(stage, false), GameElement.PANEL);
+        if(gameOver){
+            Pass tpanel = new Pass(stage, false, true);
+            em.addElement(tpanel, GameElement.PANEL);
+            stage = 1;
+            while (!em.getElementsByKey(GameElement.PLAY).get(0).isPkType()){
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            em.reinit();
+        }else {
+            if(stage==3)
+                em.addElement(new Pass(stage, true, false), GameElement.PANEL);
+            else{
+                em.addElement(new Pass(stage, false, false), GameElement.PANEL);
+            }
+            while (!em.getElementsByKey(GameElement.PLAY).get(0).isPkType()){
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if(stage==3){
+                System.exit(0);
+            }
+            em.reinit();
         }
-        try {
-            sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        if(stage==3){
-            System.exit(0);
-        }
-        em.reinit();
     }
     private long gameTime=0L;
     /**
@@ -89,11 +110,16 @@ public class GameThread extends Thread{
 
             moveAndUpdate(all, gameTime); // 游戏元素自动化方法
             gameTime++;
-//            if(em.getElementsByKey(GameElement.ENEMY).size() == 0){
-//                nextStage = true;
-//                stage+=1;
+
+            if(em.getElementsByKey(GameElement.PLAY).get(0).getHp() <=0){
+                nextStage=true;
+                gameOver = true;
+            }
+            if(em.getElementsByKey(GameElement.PLAY).get(0).getX()> GameJFrame.contentWidth){
+                nextStage = true;
+                stage+=1;
 //                System.out.println(stage);
-//            }
+            }
             try {
                 sleep(10);
             }catch (InterruptedException e){
@@ -124,7 +150,9 @@ public class GameThread extends Thread{
                 if(!obj.isLive()){
                     list.remove(i--); //list移除掉中间一个元素后，后面的元素会前移，继续后移导致漏掉一个元素
                     obj.die();
-                    continue;
+                    if(ge == GameElement.ENEMY)
+                    System.out.println(list.size());
+//                    continue;
                 }
                 obj.model(gameTime);
             }
@@ -141,7 +169,7 @@ public class GameThread extends Thread{
         GameLoad.MapLoad(stage);
 //        GameLoad.loadPlay(stage);
         GameLoad.loadEnemy(stage);
-        em.addElement(new Boss().createElement(""), GameElement.BOSS);
+//        em.addElement(new Boss().createElement(""), GameElement.BOSS);
     }
 
 }

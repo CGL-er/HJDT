@@ -1,5 +1,6 @@
 package com.tedu.element;
 
+import com.tedu.controller.GameThread;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 import com.tedu.manager.GameLoad;
@@ -24,6 +25,7 @@ public class Play extends ElementObj{
     private int speed=3;
     private int groundHeight=435;
     private int jumpSpeed = 5;
+
     private int jumpHeight = 150;
 
     private boolean right=false;
@@ -44,7 +46,6 @@ public class Play extends ElementObj{
     private int lowLen;
     private Action upState;
     private Action lowState;
-    private boolean pkType=false;
     ElementManager em = ElementManager.getManager();
 
     public Play(int x, int y, int w, int h, ImageIcon icon) {
@@ -69,7 +70,7 @@ public class Play extends ElementObj{
         }
         if(!squat && !jump){
             uybia=7;
-            setH(150);
+            setH(100);
         }
         if(squat){
             uybia=20;
@@ -168,8 +169,6 @@ public class Play extends ElementObj{
             this.upState = Action.fire_handgun_right_upper;
         if(directionRight && useGun && !pkType && !useknife)
             this.upState = Action.unfire_handgun_right_upper;
-        if(directionRight && !pkType && useknife)
-            this.upState = Action.knife_right_upper;
         if(directionRight && useGun && jump)
             this.upState = Action.jump_handgun_right_upper;
         if(directionRight && !useGun && pkType && !useknife)
@@ -178,6 +177,8 @@ public class Play extends ElementObj{
             this.upState = Action.unfire_bang_right_upper;
         if(directionRight && !useGun && jump)
             this.upState = Action.jump_bang_right_upper;
+        if(directionRight && !pkType && useknife)
+            this.upState = Action.knife_right_upper;
         if(directionRight && !jump && right)
             this.lowState = Action.run_right_lower;
 
@@ -234,7 +235,15 @@ public class Play extends ElementObj{
     public void move(long gameTime){
         int curX = this.getX();
         int curY = this.getY();
-
+        int mapBias;
+        int bias;
+        if(GameThread.getStage()==2){
+            mapBias = 280;
+            bias = -1;
+        }else {
+            mapBias = 0;
+            bias = 3;
+        }
         if(this.left && curX>GameJFrame.contentWidth*0.1)
             this.setX(curX-speed);
         if(this.left && curX<=GameJFrame.contentWidth*0.1){
@@ -242,30 +251,45 @@ public class Play extends ElementObj{
             if (tmap.getX() > 0){
                 tmap.setX(tmap.getX()-speed);
                 for(ElementObj i:em.getElementsByKey(GameElement.ENEMY)){
-                    i.setX(i.getX()+speed+3);
+                    i.setX(i.getX()+speed+bias);
                 }
             }
         }
-        if(this.right && curX< GameJFrame.contentWidth*0.8)
+        if(this.right && curX< GameJFrame.contentWidth*0.5)
             this.setX(curX+speed);
-        if(this.right && curX>=GameJFrame.contentWidth*0.8){
+        if(this.right && curX>=GameJFrame.contentWidth*0.5){
             ElementObj tmap = em.getElementsByKey(GameElement.MAPBG).get(0);
-            if (tmap.getX() < tmap.getIcon().getIconWidth()- GameJFrame.contentWidth){
+            if (tmap.getX() < tmap.getIcon().getIconWidth()- GameJFrame.contentWidth-mapBias){
                 tmap.setX(tmap.getX()+speed);
                 for(ElementObj i:em.getElementsByKey(GameElement.ENEMY)){
-                    i.setX(i.getX()-speed-3);
+                    i.setX(i.getX()-speed-bias);
                 }
                 for(ElementObj i:em.getElementsByKey(GameElement.BOSS)){
-                    i.setX(i.getX()-speed-3);
+                    i.setX(i.getX()-speed-bias);
+                }
+                for(ElementObj i:em.getElementsByKey(GameElement.DIE)){
+                    i.setX(i.getX()-speed-bias);
+                }
+//                System.out.println(tmap.getX());
+            }else {
+                if(this.getX()<=GameJFrame.contentWidth-50){
+                    this.setX(curX+speed);
+                }else {
+                    if(em.getElementsByKey(GameElement.ENEMY).size() == 0){
+                        this.setX(curX+speed);
+                    }else {
+//                        System.out.println(em.getElementsByKey(GameElement.ENEMY));
+                    }
                 }
             }
         }
+        int jumpbias = 50;
         if(this.jump){
             //可跳高度内
-            if(curY > groundHeight-getH()-jumpHeight && curY < groundHeight-getH()){
+            if(curY > groundHeight-getH()-jumpHeight-jumpbias && curY < groundHeight-getH()-jumpbias){
                 this.setY(curY-jumpSpeed);
             //站在地板的时候
-            }else if(curY==groundHeight-getH()){
+            }else if(curY==groundHeight-getH()-jumpbias){
                 if(jumpSpeed<0){
                     this.jump = false;
                     jumpSpeed = Math.abs(jumpSpeed);
@@ -273,7 +297,7 @@ public class Play extends ElementObj{
                     this.setY(curY-jumpSpeed);
                 }
             //低过地板的时候
-            }else if(curY>groundHeight-getH()){
+            }else if(curY>groundHeight-getH()-jumpbias){
                 this.jump = false;
                 jumpSpeed = Math.abs(jumpSpeed);
                 this.setY(groundHeight-getH());
@@ -314,7 +338,7 @@ public class Play extends ElementObj{
     }
     @Override
     public void bePk(GameElement tar, ElementObj b){
-        System.out.println("bePk"+tar);
+//        System.out.println("bePk"+tar);
         if(tar == GameElement.ENEMY || tar == GameElement.BOSS){
             if(b.getAttackStatus()){ // 敌人在攻击状态才会受到伤害
                 this.setHp(this.getHp()-b.getAttack());
@@ -328,8 +352,15 @@ public class Play extends ElementObj{
         }
         if(this.getHp()<=0){
             this.setHp(100);
+//            this.die();
         }
     }
+
+    @Override
+    public void die() {
+//        this.setLive(false);
+    }
+
     /**
      * @重写规则： 1.重写的方法访问的访问修饰符是否可以修改
      *              2.重写的方法传入参数类型序列，必须和父类的一样
@@ -338,6 +369,11 @@ public class Play extends ElementObj{
      */
     @Override
     protected void add(){
+        if(useknife){
+            ElementObj element = new PlayFile().createElementKnife("x:"+getX()+",y:"+getY()+",w:"+getW()+",h:"+getH());
+            ElementManager.getManager().addElement(element, GameElement.PLAYFIRE);
+            switchState();
+        }
         if(!this.pkType || noFire){ // 如果不是发射状态，返回
             return;
         }
@@ -423,4 +459,6 @@ public class Play extends ElementObj{
     public void setLowIcon(ImageIcon lowIcon) {
         this.lowIcon = lowIcon;
     }
+
+
 }

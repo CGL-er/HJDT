@@ -10,6 +10,7 @@ import java.awt.*;
  * @author cgl
  */
 public abstract class ElementObj {
+    protected boolean pkType = false;
     private int x;
     private int y;
     private int w;
@@ -183,5 +184,13 @@ public abstract class ElementObj {
 
     protected boolean getAttackValue() {
         return false;
+    }
+
+    public boolean isPkType() {
+        return pkType;
+    }
+
+    public void setPkType(boolean pkType) {
+        this.pkType = pkType;
     }
 }

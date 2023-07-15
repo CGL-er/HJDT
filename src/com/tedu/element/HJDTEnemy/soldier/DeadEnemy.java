@@ -85,7 +85,7 @@ public class DeadEnemy extends ElementObj {
             this.setH(this.getIcon().getIconHeight());
         }
 //        System.out.println(this.getIcon());
-        if(gametime-myLiveTime>20){
+        if(gametime-myLiveTime>15){
 //            System.out.println(iconList.size());
             myLiveTime = gametime;
             if(curIconIndex + 1<iconList.size()){

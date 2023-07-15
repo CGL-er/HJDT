@@ -4,6 +4,9 @@ package com.tedu.element.Bullet;
 
 import com.tedu.element.ElementObj;
 import com.tedu.element.HJDTEnemy.soldier.EnemyType;
+import com.tedu.element.fireBang;
+import com.tedu.manager.ElementManager;
+import com.tedu.manager.GameElement;
 import com.tedu.show.GameJFrame;
 
 import javax.swing.*;
@@ -62,7 +65,26 @@ public class EnemyBullet extends ElementObj {
         this.setAttack(1);
         return this;
     }
+    @Override
+    public void die(){
+        if (type == EnemyType.GUN){
+            setLive(false);
+            return;
+        }
+        ElementObj bang = new fireBang().createElement(this.toString());
+        ElementManager em=ElementManager.getManager();
+        em.addElement(bang, GameElement.DIEFIRE);
+        setLive(false);
 
+    }
+    @Override
+    public String toString() {
+        return "x:"+getX()+",y:"+(getY()-50)+",enemy:"+true+",fx:"+this.fx;
+    }
+    @Override
+    public void bePk(GameElement tar, ElementObj b){
+        die();
+    }
 
     @Override
     public void move(long gametime){
@@ -79,10 +101,7 @@ public class EnemyBullet extends ElementObj {
                 break;
         }
     }
-    @Override
-    public void die(){
-        this.setLive(false);
-    }
+
     @Override
     public void showElement(Graphics g) {
         g.drawImage(this.getIcon().getImage(),this.getX(),this.getY(),this.getW(),this.getH(),null);
