@@ -26,17 +26,7 @@ public class fireBang extends ElementObj{
     @Override
     public ElementObj createElement(String str){
         String[] split = str.split(",");
-
-        if(fx == Direction.left){
-            this.state = Action.showFire_bang_left;
-        }
-        else {
-            this.state = Action.showFire_bang_right;
-        }
-        setIcon(GameLoad.imgMaps.get(state).get(0));
-        imgLen = GameLoad.imgMaps.get(state).size();
-        this.setW(this.getIcon().getIconWidth());
-        this.setH(this.getIcon().getIconHeight());
+        boolean isEnemy = false;
         for (String str1:split){
             String[] split2=str1.split(":");
             switch (split2[0]){
@@ -49,8 +39,28 @@ public class fireBang extends ElementObj{
                     break;
                 case "fx":
                     this.fx = Direction.valueOf(split2[1]);
+                    break;
+                case "enemy":
+                    isEnemy = true;
+                    this.attack=0;
+                    break;
             }
         }
+        if(isEnemy){
+            this.state = Action.enemy_bang;
+        }else {
+            if(fx == Direction.left){
+                this.state = Action.showFire_bang_left;
+            }
+            else {
+                this.state = Action.showFire_bang_right;
+            }
+        }
+        setIcon(GameLoad.imgMaps.get(state).get(0));
+        imgLen = GameLoad.imgMaps.get(state).size();
+        this.setW(this.getIcon().getIconWidth());
+        this.setH(this.getIcon().getIconHeight());
+
         java.util.Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override

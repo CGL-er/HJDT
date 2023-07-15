@@ -229,7 +229,7 @@ public class HJDTEnemy extends ElementObj {
     @Override
     public void die() {
         Random random = new Random();
-        this.setLive(false);
+//        this.setLive(false);
         String str = this.direction?"1":"0";
         str += ","+this.getX()+","+this.getY()+"," + random.nextInt(3); //随机死亡类型
         em.addElement(new DeadEnemy().createElement(str),GameElement.DIE);

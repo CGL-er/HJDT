@@ -68,7 +68,7 @@ public class Boss extends ElementObj {
 
     @Override
     public ElementObj createElement(String str) {
-        this.setX(300);
+        this.setX(Integer.parseInt(str));
         this.setY(225);
         this.setW(iconList.get(8).getIconWidth());
         this.setH(iconList.get(8).getIconHeight());
