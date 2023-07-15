@@ -5,7 +5,6 @@ import com.tedu.manager.GameElement;
 import com.tedu.show.GameJFrame;
 
 import javax.swing.*;
-import javax.xml.stream.Location;
 import java.awt.*;
 
 /**
@@ -84,12 +83,12 @@ public class PlayFile extends ElementObj{
         }
         ElementObj bang = new fireBang().createElement(this.toString());
         ElementManager em=ElementManager.getManager();
-        em.addElement(bang, GameElement.DIE);
+        em.addElement(bang, GameElement.DIEFIRE);
         setLive(false);
 
     }
     @Override
-    public void bePk(GameElement tar){
+    public void bePk(GameElement tar, ElementObj b){
         die();
     }
     @Override

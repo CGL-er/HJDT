@@ -11,20 +11,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class EnemyBullet extends ElementObj {
-    private int attack;
+//    private int attack;
     private int speed = 10;
     private String fx;
     public static int bulletSize = 10;
     private EnemyType type;
     public EnemyBullet() {}
 
-    public int getAttack() {
-        return attack;
-    }
-
-    public void setAttack(int attack) {
-        this.attack = attack;
-    }
 
     @Override
     public ElementObj createElement(String str) {
@@ -45,11 +38,11 @@ public class EnemyBullet extends ElementObj {
                     if(split1[1].equals("GUN")){
                         this.type = EnemyType.GUN;
                         this.setIcon(new ImageIcon("Image/bullet/bomb1.png"));
-                        this.attack = 2;
+                        this.setAttack(2);
                     }else if(split1[1].equals("ROCKET_GUN")){
                         this.type = EnemyType.ROCKET_GUN;
                         this.setIcon(new ImageIcon("Image/bullet/bullet30.png"));
-                        this.attack = 3;
+                        this.setAttack(3);
                     }
                     break;
             }

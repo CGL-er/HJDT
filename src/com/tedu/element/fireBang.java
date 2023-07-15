@@ -17,6 +17,12 @@ public class fireBang extends ElementObj{
     private int imgLen;
     private Action state;
     private int x;
+    private int attack = 1;
+
+    public int getAttack() {
+        return attack;
+    }
+
     @Override
     public ElementObj createElement(String str){
         String[] split = str.split(",");
@@ -59,12 +65,11 @@ public class fireBang extends ElementObj{
     @Override
     public void die(){
         setLive(false);
-
     }
     @Override
     protected void updateImage(long gameTime){
         if(gameTime-curTime>6){
-            System.out.println(1);
+//            System.out.println(1);
             this.setIcon(GameLoad.imgMaps.get(state).get((++curIndex)%imgLen));
             if(fx == Direction.left){
                 this.setIcon(flipImage(this.getIcon()));
@@ -87,6 +92,5 @@ public class fireBang extends ElementObj{
     @Override
     public void showElement(Graphics g){
         g.drawImage(getIcon().getImage(), getX(), getY(), getW(), getH(), null);
-
     }
 }

@@ -1,7 +1,6 @@
 package com.tedu.element.HJDTEnemy.soldier;
 
 import com.tedu.element.Bullet.EnemyBullet;
-import com.tedu.element.Direction;
 import com.tedu.element.ElementObj;
 import com.tedu.element.Panel;
 import com.tedu.element.PlayFile;
@@ -168,8 +167,6 @@ public class HJDTEnemy extends ElementObj {
         if(this.getType()==EnemyType.KINEF){
             this.setHp(3);
             this.attackDistance = 0;
-
-
         }else if(this.getType()==EnemyType.GUN){
             this.setHp(2);
             this.attackDistance = 200;
@@ -209,9 +206,9 @@ public class HJDTEnemy extends ElementObj {
         }
     }
     @Override
-    public void bePk(GameElement tar){
-        if(tar==GameElement.PLAYFIRE){
-            this.setHp(this.getHp()-new PlayFile().getAttack());
+    public void bePk(GameElement tar, ElementObj b){
+        if(tar==GameElement.PLAYFIRE || tar==GameElement.DIEFIRE){
+            this.setHp(this.getHp()-b.getAttack());
         }
         if(this.getHp()<=0){
             if (isLive()){

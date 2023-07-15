@@ -76,6 +76,7 @@ public class GameThread extends Thread{
         while (!nextStage){ //预览拓展 true可以变为变量，控制关卡结束
             Map<GameElement, List<ElementObj>> all = em.getGameElements();
             ElementPK(GameElement.ENEMY, GameElement.PLAYFIRE);
+            ElementPK(GameElement.ENEMY, GameElement.DIEFIRE);
             ElementPK(GameElement.PLAYFIRE, GameElement.MAPS);
             ElementPK(GameElement.PLAY, GameElement.MAPS);
             ElementPK(GameElement.PLAY, GameElement.ENEMY);
@@ -102,8 +103,8 @@ public class GameThread extends Thread{
                 ElementObj A = listA.get(i);
                 ElementObj B = listB.get(j);
                 if(A.pk(B) && A.isLive() && B.isLive()){
-                    A.bePk(tarB);
-                    B.bePk(tarA);
+                    A.bePk(tarB,B);
+                    B.bePk(tarA,A);
                 }
             }
         }

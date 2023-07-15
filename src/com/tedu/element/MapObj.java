@@ -4,7 +4,6 @@ import com.tedu.manager.GameElement;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Properties;
 
 public class MapObj extends ElementObj{
     @Override
@@ -14,7 +13,7 @@ public class MapObj extends ElementObj{
                 this.getH(), this.getW(), null);
     }
     @Override
-    public void bePk(GameElement tar){
+    public void bePk(GameElement tar, ElementObj b){
         if(this.getHp()==-100)
             return;
         if (tar==GameElement.PLAYFIRE)

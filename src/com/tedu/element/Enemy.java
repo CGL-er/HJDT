@@ -2,10 +2,8 @@ package com.tedu.element;
 
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
-import com.tedu.manager.GameLoad;
 import com.tedu.show.GameJFrame;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Random;
@@ -31,7 +29,7 @@ public class Enemy extends ElementObj{
         g.drawImage(this.getIcon().getImage(), this.getX(), this.getY(), this.getW(), this.getH(), null);
     }
     @Override
-    public void bePk(GameElement tar){
+    public void bePk(GameElement tar, ElementObj b){
 //        System.out.println(this.getHp());
 
         if(tar==GameElement.PLAYFIRE){

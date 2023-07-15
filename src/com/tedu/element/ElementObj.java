@@ -4,8 +4,6 @@ import com.tedu.manager.GameElement;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @说明 所有元素的基类
@@ -22,6 +20,16 @@ public abstract class ElementObj {
 //    还有各种必要的状态值
     private int hp;
     private int maxHp;
+    private int attack;
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
     public ElementObj(){ // 此构造无作用，只是为了继承无作用而写
 
     }
@@ -58,7 +66,7 @@ public abstract class ElementObj {
     public void keyClick(boolean b1, int key){ // 这个方法不是强制必须重写的
 
     }
-    public void bePk(GameElement tar){
+    public void bePk(GameElement tar, ElementObj b){
 
     }
     public void die(){

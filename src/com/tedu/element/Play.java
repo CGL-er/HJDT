@@ -4,12 +4,10 @@ import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 import com.tedu.manager.GameLoad;
 import com.tedu.show.GameJFrame;
-import com.tedu.show.GameMainJPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 import java.util.Timer;
 
 public class Play extends ElementObj{
@@ -312,7 +310,7 @@ public class Play extends ElementObj{
         switchState();
     }
     @Override
-    public void bePk(GameElement tar){
+    public void bePk(GameElement tar, ElementObj b){
 //        if (tar == GameElement.MAPS || tar == GameElement.ENEMY)
 
     }
