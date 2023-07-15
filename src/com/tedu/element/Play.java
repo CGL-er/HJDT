@@ -255,6 +255,9 @@ public class Play extends ElementObj{
                 for(ElementObj i:em.getElementsByKey(GameElement.ENEMY)){
                     i.setX(i.getX()-speed-3);
                 }
+                for(ElementObj i:em.getElementsByKey(GameElement.BOSS)){
+                    i.setX(i.getX()-speed-3);
+                }
             }
         }
         if(this.jump){
@@ -311,8 +314,21 @@ public class Play extends ElementObj{
     }
     @Override
     public void bePk(GameElement tar, ElementObj b){
-//        if (tar == GameElement.MAPS || tar == GameElement.ENEMY)
+        System.out.println("bePk"+tar);
+        if(tar == GameElement.ENEMY || tar == GameElement.BOSS){
+            if(b.getAttackStatus()){ // 敌人在攻击状态才会受到伤害
+                this.setHp(this.getHp()-b.getAttack());
+                b.setAttackStatus(false);
 
+            }
+        }else{
+            if(tar == GameElement.ENEMYFIRE){
+                this.setHp(this.getHp()-b.getAttack());
+            }
+        }
+        if(this.getHp()<=0){
+            this.setHp(100);
+        }
     }
     /**
      * @重写规则： 1.重写的方法访问的访问修饰符是否可以修改

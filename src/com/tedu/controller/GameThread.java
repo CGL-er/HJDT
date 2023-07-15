@@ -1,6 +1,7 @@
 package com.tedu.controller;
 
 import com.tedu.element.*;
+import com.tedu.element.HJDTEnemy.boss.Boss;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
 import com.tedu.manager.GameLoad;
@@ -77,9 +78,15 @@ public class GameThread extends Thread{
             Map<GameElement, List<ElementObj>> all = em.getGameElements();
             ElementPK(GameElement.ENEMY, GameElement.PLAYFIRE);
             ElementPK(GameElement.ENEMY, GameElement.DIEFIRE);
+            ElementPK(GameElement.BOSS, GameElement.PLAYFIRE);
+            ElementPK(GameElement.BOSS, GameElement.DIEFIRE);
+
             ElementPK(GameElement.PLAYFIRE, GameElement.MAPS);
             ElementPK(GameElement.PLAY, GameElement.MAPS);
             ElementPK(GameElement.PLAY, GameElement.ENEMY);
+            ElementPK(GameElement.PLAY, GameElement.ENEMYFIRE);
+            ElementPK(GameElement.PLAY, GameElement.BOSS);
+
             moveAndUpdate(all, gameTime); // 游戏元素自动化方法
             gameTime++;
 //            if(em.getElementsByKey(GameElement.ENEMY).size() == 0){
@@ -134,7 +141,7 @@ public class GameThread extends Thread{
         GameLoad.MapLoad(stage);
 //        GameLoad.loadPlay(stage);
         GameLoad.loadEnemy(stage);
-
+        em.addElement(new Boss().createElement(""), GameElement.BOSS);
     }
 
 }

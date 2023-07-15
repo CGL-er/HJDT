@@ -61,11 +61,9 @@ public class HJDTEnemy extends ElementObj {
     public boolean GetPlayDirtion() {
         int dis = this.getPlayDistance();
         if(dis < noticeDistance){
-//            System.out.println("注意到你了,当前距离:"+dis);
             if(dis > attackDistance){
                 this.setStatus(EnemyStatus.RUN);
             }else {
-//                System.out.println(this.getType().toString() + dis);
                 this.setStatus(EnemyStatus.ATTACK);
             }
             return playDirtion;
@@ -166,12 +164,16 @@ public class HJDTEnemy extends ElementObj {
         this.setY(300);
         if(this.getType()==EnemyType.KINEF){
             this.setHp(3);
+            this.setMaxHp(3);
             this.attackDistance = 0;
+            this.setAttack(10);
         }else if(this.getType()==EnemyType.GUN){
+            this.setMaxHp(2);
             this.setHp(2);
             this.attackDistance = 200;
         }
         else if(this.getType()==EnemyType.ROCKET_GUN){
+            this.setMaxHp(2);
             this.setHp(2);
             this.attackDistance = 300;
         }
@@ -191,7 +193,7 @@ public class HJDTEnemy extends ElementObj {
             if((shutSpeed+1)%Gunspeed != 0 && this.type==EnemyType.GUN){
                 shutSpeed++;
                 return;
-            }else if((shutSpeed+1)%RocketSpeed != 0 && this.type==EnemyType.ROCKET_GUN){
+            }else if((((shutSpeed + 1) % RocketSpeed) != 0) && (this.type == EnemyType.ROCKET_GUN)){
                 shutSpeed++;
                 return;
             }
@@ -208,6 +210,7 @@ public class HJDTEnemy extends ElementObj {
     @Override
     public void bePk(GameElement tar, ElementObj b){
         if(tar==GameElement.PLAYFIRE || tar==GameElement.DIEFIRE){
+            System.out.println("敌人被攻击"+tar);
             this.setHp(this.getHp()-b.getAttack());
         }
         if(this.getHp()<=0){
@@ -241,7 +244,19 @@ public class HJDTEnemy extends ElementObj {
         if(gametime - myLiveTime > 10){
             myLiveTime = gametime;
             List<ImageIcon> icons = EnemyMap.get(this.getType()).get(this.getStatus());
-            curIconIndex = (curIconIndex + 1) % icons.size();
+            curIconIndex++;
+            if(this.curIconIndex == 4 && this.type == EnemyType.KINEF && !this.getAttackStatus()){
+                this.setAttackStatus(true);
+            }
+            if(this.curIconIndex < 4 &&this.type == EnemyType.KINEF && this.getAttackStatus()) {
+                System.out.println("切换状态");
+                this.setAttackStatus(false);
+            }
+
+            if(this.curIconIndex >= icons.size()){
+                this.curIconIndex = 0;
+            }
+
             ImageIcon icon = icons.get(curIconIndex);
 
 //            if(this.getH() != 0 && this.getW() != 0){
@@ -277,6 +292,7 @@ public class HJDTEnemy extends ElementObj {
         }else{
             statusKeepTime+=1;
         }
+
     }
 
     public static ImageIcon flipImage(ImageIcon image) {
@@ -320,6 +336,12 @@ public class HJDTEnemy extends ElementObj {
             int by = this.getH() - this.getIcon().getIconHeight();
             g.drawImage(this.getIcon().getImage(),this.getX(),this.getY()+by,this.getIcon().getIconWidth(),this.getIcon().getIconHeight(),null);
             g.drawRect(this.getX(),this.getY(),this.getW(),this.getH());
+            // 绘制血条
+            g.setColor(Color.RED);
+            g.fillRect(this.getX(),this.getY()-10,this.getW(),5);
+            g.setColor(Color.GREEN);
+            g.fillRect(this.getX(),this.getY()-10,(int)(this.getW()*this.getHp()/this.getMaxHp()),5);
+
         }
     }
     public ElementManager getEm() {

@@ -20,14 +20,21 @@ public abstract class ElementObj {
 //    还有各种必要的状态值
     private int hp;
     private int maxHp;
-    private int attack;
+    private int attackValue; // 攻击力
+    private boolean isAttack; // 攻击状态
 
+    public void setAttackStatus(boolean attackStatus) {
+        isAttack = attackStatus;
+    }
+    public boolean getAttackStatus() {
+        return isAttack;
+    }
     public int getAttack() {
-        return attack;
+        return attackValue;
     }
 
-    public void setAttack(int attack) {
-        this.attack = attack;
+    public void setAttack(int attackValue) {
+        this.attackValue = attackValue;
     }
 
     public ElementObj(){ // 此构造无作用，只是为了继承无作用而写
@@ -172,5 +179,9 @@ public abstract class ElementObj {
 
     public void setMaxHp(int maxHp) {
         this.maxHp = maxHp;
+    }
+
+    protected boolean getAttackValue() {
+        return false;
     }
 }
