@@ -1,10 +1,12 @@
-package com.tedu.element.HJDTEnemy;
+package com.tedu.element.HJDTEnemy.soldier;
 
 import com.tedu.element.Bullet.EnemyBullet;
+import com.tedu.element.Direction;
 import com.tedu.element.ElementObj;
+import com.tedu.element.Panel;
+import com.tedu.element.PlayFile;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
-import com.tedu.manager.GameLoad;
 import com.tedu.show.GameJFrame;
 
 import javax.swing.*;
@@ -26,9 +28,56 @@ public class HJDTEnemy extends ElementObj {
     private int movetime = 0; //移动间隔时间
     private int moveDistance = 0; //移动距离
     private int statusKeepTime = 0; //状态持续时间
-    private final int Gunspeed = 10; //枪速
-    private final int RocketSpeed = 10; //火箭速度
+    private final int Gunspeed = 15; //枪速
+    private final int RocketSpeed = 15; //火箭速度
     private int shutSpeed = 0; //射击速度
+    private int biasX = 0; // x 偏移
+    private int biasY = 0; // y 偏移
+    private int noticeDistance = 400; // 警觉范围
+    private int attackDistance = 200; // 攻击间隔时间
+    private EnemyType type; // 敌人类型
+    private int speed = 10; // 移动速度
+    /**
+     * true 向右 false 向左
+     */
+    private boolean direction = true;
+    private EnemyStatus status = EnemyStatus.RUN; // 状态
+    /**
+     * 玩家方向，false左，true右
+     */
+    private boolean playDirtion = true; // 玩家方向，false在左，true在右
+
+    public int getPlayDistance(){
+        int x = em.getElementsByKey(GameElement.PLAY).get(0).getX();
+        int w = em.getElementsByKey(GameElement.PLAY).get(0).getW();
+        if(this.getX() < x + w && this.getX() + this.getW() > x){
+            return 0;
+        }
+
+        int t1 = Math.abs(x - (this.getX() + this.getW()));
+        int t2 = Math.abs(x + w - this.getX());
+        this.playDirtion = t1 <= t2;
+        return Math.min(t1,t2);
+    }
+    public boolean GetPlayDirtion() {
+        int dis = this.getPlayDistance();
+        if(dis < noticeDistance){
+//            System.out.println("注意到你了,当前距离:"+dis);
+            if(dis > attackDistance){
+                this.setStatus(EnemyStatus.RUN);
+            }else {
+//                System.out.println(this.getType().toString() + dis);
+                this.setStatus(EnemyStatus.ATTACK);
+            }
+            return playDirtion;
+        }else {
+            return this.direction;
+        }
+    }
+
+    public void setPlayDirtion(boolean playDirtion) {
+        this.playDirtion = playDirtion;
+    }
 
     static {
         String url = "image/Enemy/";
@@ -101,10 +150,7 @@ public class HJDTEnemy extends ElementObj {
         EnemyMap.put(EnemyType.ROCKET_GUN,map);
     }
 
-    private EnemyType type; // 敌人类型
-    private int speed = 5; // 移动速度
-    private boolean direction = true; // true 向右 false 向左
-    private EnemyStatus status = EnemyStatus.RUN; // 状态
+
 
     /**
      * type: 传入 x,type,status
@@ -119,7 +165,21 @@ public class HJDTEnemy extends ElementObj {
         this.setType(EnemyType.values()[Integer.parseInt(split[1])]);
         this.setStatus(EnemyStatus.values()[Integer.parseInt(split[2])]);
         this.setY(300);
+        if(this.getType()==EnemyType.KINEF){
+            this.setHp(3);
+            this.attackDistance = 0;
 
+
+        }else if(this.getType()==EnemyType.GUN){
+            this.setHp(2);
+            this.attackDistance = 200;
+        }
+        else if(this.getType()==EnemyType.ROCKET_GUN){
+            this.setHp(2);
+            this.attackDistance = 300;
+        }
+        this.setH(EnemyMap.get(this.getType()).get(this.getStatus()).get(0).getIconHeight());
+        this.setW(EnemyMap.get(this.getType()).get(this.getStatus()).get(0).getIconWidth());
 //        System.out.println("创建敌人："+this.getX()+","+this.getY()+","+this.getType()+","+this.getStatus());
         return this;
     }
@@ -148,6 +208,18 @@ public class HJDTEnemy extends ElementObj {
             }
         }
     }
+    @Override
+    public void bePk(GameElement tar){
+        if(tar==GameElement.PLAYFIRE){
+            this.setHp(this.getHp()-new PlayFile().getAttack());
+        }
+        if(this.getHp()<=0){
+            if (isLive()){
+                setLive(false);
+                com.tedu.element.Panel.setScore(Panel.getScore()+1);
+            }
+        }
+    }
 
     @Override
     public String toString() {
@@ -166,11 +238,22 @@ public class HJDTEnemy extends ElementObj {
     @Override
     protected void updateImage(long gametime) {
         changeStatus();
+        if(this.getX() < 0){
+            this.setX(0);
+        }
         if(gametime - myLiveTime > 10){
             myLiveTime = gametime;
             List<ImageIcon> icons = EnemyMap.get(this.getType()).get(this.getStatus());
             curIconIndex = (curIconIndex + 1) % icons.size();
             ImageIcon icon = icons.get(curIconIndex);
+
+//            if(this.getH() != 0 && this.getW() != 0){
+//                this.biasX = this.getW() - this.getIcon().getIconWidth();
+//                this.biasY = this.getH() - this.getIcon().getIconHeight();
+//            }
+
+            this.setX(this.getX() + biasX);
+            this.setY(this.getY() + biasY);
 
             if(this.direction){
                 this.setIcon(icon);
@@ -183,16 +266,17 @@ public class HJDTEnemy extends ElementObj {
                     this.setIcon(icon);
                 }
             }
-            this.setH(this.getIcon().getIconHeight());
-            this.setW(this.getIcon().getIconWidth());
+
         }
     }
 
     private void changeStatus() {
-        if(statusKeepTime > 100){
+        this.direction = this.GetPlayDirtion();
+        if(statusKeepTime > 500){
             statusKeepTime = 0;
             Random ra = new Random();
             this.setStatus(EnemyStatus.values()[ra.nextInt(3)]);
+
         }else{
             statusKeepTime+=1;
         }
@@ -222,8 +306,10 @@ public class HJDTEnemy extends ElementObj {
                     this.setX(this.getX() - this.getSpeed());
                 }
             }
-            if(moveDistance > 20 && GameJFrame.OutBoard(this.getX(),this.getY())){
-                changeDirection();
+            if(GameJFrame.OutBoard(this.getX(),this.getY()) || GameJFrame.OutBoard(this.getX()+this.getW(),this.getY())){
+                System.out.println("出界了");
+                this.changeDirection();
+                moveDistance = 0;
             }
         }
     }
@@ -231,8 +317,13 @@ public class HJDTEnemy extends ElementObj {
     @Override
     public void showElement(Graphics g) {
 //        System.out.println("hello");
-        if(this.getIcon()!=null)
-            g.drawImage(this.getIcon().getImage(),this.getX(),this.getY(),this.getW(),this.getH(),null);
+
+        if(this.getIcon()!=null){
+            int bx = this.getW() - this.getIcon().getIconWidth();
+            int by = this.getH() - this.getIcon().getIconHeight();
+            g.drawImage(this.getIcon().getImage(),this.getX(),this.getY()+by,this.getIcon().getIconWidth(),this.getIcon().getIconHeight(),null);
+            g.drawRect(this.getX(),this.getY(),this.getW(),this.getH());
+        }
     }
     public ElementManager getEm() {
         return em;

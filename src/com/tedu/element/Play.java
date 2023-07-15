@@ -93,6 +93,7 @@ public class Play extends ElementObj{
         g.drawImage(this.getLowIcon().getImage(),
                 this.getX()+lxbia, this.getY()+this.getUpIcon().getIconHeight()+lybia,
                 this.getLowIcon().getIconWidth(), this.getLowIcon().getIconHeight(), null);
+        g.drawRect(this.getX(), this.getY(), this.getW(), this.getH());
     }
     @Override
     public void keyClick(boolean bl, int key){
@@ -236,11 +237,20 @@ public class Play extends ElementObj{
         int curX = this.getX();
         int curY = this.getY();
 
-        if(this.left && curX>0)
+        if(this.left && curX>GameJFrame.contentWidth*0.1)
             this.setX(curX-speed);
-        if(this.right && curX< GameJFrame.contentWidth*0.4)
+        if(this.left && curX<=GameJFrame.contentWidth*0.1){
+            ElementObj tmap = em.getElementsByKey(GameElement.MAPBG).get(0);
+            if (tmap.getX() > 0){
+                tmap.setX(tmap.getX()-speed);
+                for(ElementObj i:em.getElementsByKey(GameElement.ENEMY)){
+                    i.setX(i.getX()+speed+3);
+                }
+            }
+        }
+        if(this.right && curX< GameJFrame.contentWidth*0.8)
             this.setX(curX+speed);
-        if(this.right && curX>=GameJFrame.contentWidth*0.4){
+        if(this.right && curX>=GameJFrame.contentWidth*0.8){
             ElementObj tmap = em.getElementsByKey(GameElement.MAPBG).get(0);
             if (tmap.getX() < tmap.getIcon().getIconWidth()- GameJFrame.contentWidth){
                 tmap.setX(tmap.getX()+speed);

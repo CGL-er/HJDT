@@ -3,7 +3,7 @@ package com.tedu.element.Bullet;
 
 
 import com.tedu.element.ElementObj;
-import com.tedu.element.HJDTEnemy.EnemyType;
+import com.tedu.element.HJDTEnemy.soldier.EnemyType;
 import com.tedu.show.GameJFrame;
 
 import javax.swing.*;

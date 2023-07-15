@@ -42,6 +42,7 @@ public class PlayFile extends ElementObj{
                             this.setIcon(new ImageIcon("image/bullet/bullet01.png"));
                         else
                             this.setIcon(new ImageIcon("image/bullet/bullet00.png"));
+                        this.setAttack(2);
                     }
                     else{
                         isGun=false;
@@ -49,6 +50,7 @@ public class PlayFile extends ElementObj{
                             this.setIcon(new ImageIcon("image/bullet/bullet41.png"));
                         else
                             this.setIcon(new ImageIcon("image/bullet/bullet40.png"));
+                        this.setAttack(5);
                     }
 
                     break;
@@ -63,7 +65,7 @@ public class PlayFile extends ElementObj{
 
 
         this.moveNum = 8;
-        this.setAttack(1);
+//        this.setAttack(1);
         return this;
     }
     @Override

@@ -1,4 +1,4 @@
-package com.tedu.element.HJDTEnemy;
+package com.tedu.element.HJDTEnemy.soldier;
 
 import com.tedu.element.ElementObj;
 
@@ -57,7 +57,8 @@ public class DeadEnemy extends ElementObj {
 
         this.setW(iconList.get(0).getIconWidth());
         this.setH(iconList.get(0).getIconHeight());
-        System.out.println("我死了");
+        this.setIcon(iconList.get(0));
+//        System.out.println("我死了");
         return this;
     }
 
@@ -83,9 +84,9 @@ public class DeadEnemy extends ElementObj {
             this.setW(this.getIcon().getIconWidth());
             this.setH(this.getIcon().getIconHeight());
         }
-        System.out.println(this.getIcon());
+//        System.out.println(this.getIcon());
         if(gametime-myLiveTime>20){
-            System.out.println(iconList.size());
+//            System.out.println(iconList.size());
             myLiveTime = gametime;
             if(curIconIndex + 1<iconList.size()){
                 this.setIcon(iconList.get(++curIconIndex));

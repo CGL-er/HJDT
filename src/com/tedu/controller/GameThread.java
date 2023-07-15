@@ -101,7 +101,7 @@ public class GameThread extends Thread{
             for(int j = 0; j<listB.size(); j++){
                 ElementObj A = listA.get(i);
                 ElementObj B = listB.get(j);
-                if(A.pk(B)){
+                if(A.pk(B) && A.isLive() && B.isLive()){
                     A.bePk(tarB);
                     B.bePk(tarA);
                 }
