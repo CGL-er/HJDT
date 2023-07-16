@@ -15,7 +15,6 @@ public class MapBg extends ElementObj {
                 this.getX() + (int)(this.getIcon().getIconHeight()*imgRt),
                 this.getIcon().getIconHeight(),
                 null);
-
     }
 
     @Override

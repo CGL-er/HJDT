@@ -51,7 +51,7 @@ public class EnemyBullet extends ElementObj {
             }
         }
 
-        if(fx.equals("left")){
+        if(fx.equals("right")){
             if(this.getIcon() != null)
                 this.setIcon(flipImage(this.getIcon()));
         }
