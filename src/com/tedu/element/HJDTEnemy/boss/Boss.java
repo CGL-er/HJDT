@@ -1,5 +1,6 @@
 package com.tedu.element.HJDTEnemy.boss;
 
+import com.tedu.controller.GameThread;
 import com.tedu.element.Action;
 import com.tedu.element.ElementObj;
 import com.tedu.element.HJDTEnemy.soldier.DeadType;
@@ -25,6 +26,7 @@ public class Boss extends ElementObj {
     private int noticeDistance = 600; // 警觉范围
     private boolean status = false; // 状态，移动攻击true，原地攻击false
     private int attackDistance = 10; // 攻击范围
+    private int attackTime = 10; // 共计图片更换时间
     private int kind;
 
     private int absX;
@@ -55,8 +57,10 @@ public class Boss extends ElementObj {
         this.setX(Integer.parseInt(str.split(",")[1]));
         if(kind==1){
             setY(240);
+            this.attackTime = 8;
         }else {
             this.setY(225);
+            this.attackTime = 4;
         }
         this.setW(iconList.get(8).getIconWidth());
         this.setH(iconList.get(8).getIconHeight());
@@ -65,17 +69,18 @@ public class Boss extends ElementObj {
         this.setLive(true);
         this.setAttackStatus(true);
         this.setAttack(10);
+//        GameThread.feiji = true;
         return this;
     }
-    @Override
-    public Rectangle getRectangle(){
-        return new Rectangle(getX()+100,getY()+120,getW()-150,getH()-120);
-    }
+//    @Override
+//    public Rectangle getRectangle(){
+//        return new Rectangle(getX()+100,getY()+120,getW()-150,getH()-120);
+//    }
     @Override
     protected void updateImage(long gameTime) {
         updateDirection();
         updateStatus();
-        if(gameTime-myLiveTime>4){
+        if(gameTime-myLiveTime>attackTime){
             int attackL;
             int attackR;
             if(kind==2){
@@ -86,7 +91,7 @@ public class Boss extends ElementObj {
             myLiveTime = gameTime;
             this.curIconIndex++;
             if(this.curIconIndex == attackL && !this.getAttackStatus()) this.setAttackStatus(true);
-            if(this.curIconIndex <attackL && this.curIconIndex > attackR && this.getAttackStatus()) this.setAttackStatus(false);
+            if((this.curIconIndex <attackL || this.curIconIndex > attackR) && this.getAttackStatus()) this.setAttackStatus(false);
             if(kind == 1 && curIconIndex == 10){
                 newSoldierRand();
             }
@@ -110,12 +115,16 @@ public class Boss extends ElementObj {
     @Override
     public void bePk(GameElement tar, ElementObj b) {
         if(tar == GameElement.PLAYFIRE || tar == GameElement.DIEFIRE){
-//            System.out.println("boss be pk");
-//            System.out.println(tar);
+//            System.out.println("boss被火球打到");
             this.setHp(this.getHp()-b.getAttack());
         }
         if(this.getHp()<=0){
             this.setLive(false);
+            GameThread.feiji = false;
+            List<ElementObj> list = em.getElementsByKey(GameElement.PLANE);
+            if(list.size() >= 1){
+                list.get(0).setLive(false);
+            }
             em.addElement(new older().createElement(""), GameElement.ODER);
         }
     }
@@ -123,7 +132,7 @@ public class Boss extends ElementObj {
     @Override
     protected void move(long gameTime) {
         if(kind==2){
-            if(getAttackStatus()){
+            if(getAttackStatus() && this.status){
                 if(this.direction){
                     this.setX(this.getX()-5);
                 }else {
@@ -141,7 +150,6 @@ public class Boss extends ElementObj {
 
     private void updateStatus(){
         int distance = getPlayDistance();
-//        System.out.println(distance);
         if(distance > noticeDistance){
             this.status = false;
             return;

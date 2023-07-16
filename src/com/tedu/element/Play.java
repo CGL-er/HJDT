@@ -254,7 +254,7 @@ public class Play extends ElementObj{
                     i.setX(i.getX()+speed+bias);
                 }
                 for(ElementObj i:em.getElementsByKey(GameElement.ENEMYFIRE)){
-                    i.setX(i.getX()+speed-bias);
+                    i.setX(i.getX()+speed+bias);
                 }
                 for(ElementObj i:em.getElementsByKey(GameElement.BOSS)){
                     i.setX(i.getX()+speed+bias);

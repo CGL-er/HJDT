@@ -27,7 +27,7 @@ public class GameThread extends Thread{
 
     private static int stage;
     private static boolean gameOver = false;
-
+    public static boolean feiji = false;
     public GameThread(){
         em=ElementManager.getManager();
     }
@@ -110,10 +110,9 @@ public class GameThread extends Thread{
             ElementPK(GameElement.PLAY, GameElement.MAPS);
             ElementPK(GameElement.PLAY, GameElement.ENEMY);
             ElementPK(GameElement.PLAY, GameElement.ENEMYFIRE);
-            ElementPK(GameElement.PLAY, GameElement.BOSS);
 
             moveAndUpdate(all, gameTime); // 游戏元素自动化方法
-            if(gameTime % 1200 == 0){
+            if(gameTime % 1200 == 0 && feiji){
                 em.addElement(new plane().createElement(""), GameElement.PLANE);
             }
             gameTime++;
