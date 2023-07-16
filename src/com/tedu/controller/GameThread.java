@@ -117,7 +117,7 @@ public class GameThread extends Thread{
                 em.addElement(new plane().createElement(""), GameElement.PLANE);
             }
             gameTime++;
-            System.out.println(gameTime);
+//            System.out.println(gameTime);
 
 
 

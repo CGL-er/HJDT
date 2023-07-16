@@ -27,3 +27,6 @@ unfire_handgun_right_upper=image/plays/right/unfire/handgun/upperBody
 showFire_bang_left=image/plays/fire/bang/left
 showFire_bang_right=image/plays/fire/bang/right
 enemy_bang=image/Enemy/fire/bang
+
+boss1=image/Enemy/Boss/boss1
+boss2=image/Enemy/Boss/boss2

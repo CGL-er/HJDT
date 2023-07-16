@@ -1,10 +1,13 @@
 package com.tedu.element.HJDTEnemy.boss;
 
+import com.tedu.element.Action;
 import com.tedu.element.ElementObj;
 import com.tedu.element.HJDTEnemy.soldier.DeadType;
+import com.tedu.element.HJDTEnemy.soldier.HJDTEnemy;
 import com.tedu.element.older.older;
 import com.tedu.manager.ElementManager;
 import com.tedu.manager.GameElement;
+import com.tedu.manager.GameLoad;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,15 +15,20 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class Boss extends ElementObj {
-    private static ElementManager em = ElementManager.getManager();
+    private ElementManager em = ElementManager.getManager();
     private Long myLiveTime = 0L;
     private int curIconIndex = 0;
     private boolean direction = true;
-    private int noticeDistance = 1000; // 警觉范围
+    private int noticeDistance = 600; // 警觉范围
     private boolean status = false; // 状态，移动攻击true，原地攻击false
     private int attackDistance = 10; // 攻击范围
+    private int kind;
+
+    private int absX;
+
 
     /**
      * 玩家方向，false左，true右
@@ -39,38 +47,17 @@ public class Boss extends ElementObj {
         return Math.min(t1,t2);
     }
 
-    private static ArrayList<ImageIcon> iconList;
-    static {
-        String url = "image/Enemy/Boss/";
-        iconList = new ArrayList<>();
-        iconList.add(new ImageIcon(url+"1.png"));
-        iconList.add(new ImageIcon(url+"2.png"));
-        iconList.add(new ImageIcon(url+"3.png"));
-        iconList.add(new ImageIcon(url+"4.png"));
-        iconList.add(new ImageIcon(url+"5.png"));
-        iconList.add(new ImageIcon(url+"6.png"));
-        iconList.add(new ImageIcon(url+"7.png"));
-        iconList.add(new ImageIcon(url+"8.png"));
-        iconList.add(new ImageIcon(url+"9.png"));
-        iconList.add(new ImageIcon(url+"10.png"));
-        iconList.add(new ImageIcon(url+"11.png"));
-        iconList.add(new ImageIcon(url+"12.png"));
-        iconList.add(new ImageIcon(url+"13.png"));
-        iconList.add(new ImageIcon(url+"14.png"));
-        iconList.add(new ImageIcon(url+"15.png"));
-        iconList.add(new ImageIcon(url+"16.png"));
-        iconList.add(new ImageIcon(url+"17.png"));
-        iconList.add(new ImageIcon(url+"18.png"));
-        iconList.add(new ImageIcon(url+"19.png"));
-        iconList.add(new ImageIcon(url+"20.png"));
-        iconList.add(new ImageIcon(url+"21.png"));
-        iconList.add(new ImageIcon(url+"22.png"));
-    }
-
+    private List<ImageIcon> iconList;
     @Override
     public ElementObj createElement(String str) {
-        this.setX(Integer.parseInt(str));
-        this.setY(225);
+        this.kind = Integer.parseInt(str.split(",")[0]);
+        this.iconList = GameLoad.imgMaps.get(Action.valueOf("boss"+kind));
+        this.setX(Integer.parseInt(str.split(",")[1]));
+        if(kind==1){
+            setY(240);
+        }else {
+            this.setY(225);
+        }
         this.setW(iconList.get(8).getIconWidth());
         this.setH(iconList.get(8).getIconHeight());
         this.setMaxHp(500);
@@ -80,17 +67,29 @@ public class Boss extends ElementObj {
         this.setAttack(10);
         return this;
     }
-
+    @Override
+    public Rectangle getRectangle(){
+        return new Rectangle(getX()+100,getY()+120,getW()-150,getH()-120);
+    }
     @Override
     protected void updateImage(long gameTime) {
         updateDirection();
         updateStatus();
         if(gameTime-myLiveTime>4){
+            int attackL;
+            int attackR;
+            if(kind==2){
+                attackL = 7; attackR = 15;
+            }else{
+                attackL =3; attackR = 10;
+            }
             myLiveTime = gameTime;
             this.curIconIndex++;
-            if(this.curIconIndex == 7 && !this.getAttackStatus()) this.setAttackStatus(true);
-            if(this.curIconIndex <7 && this.curIconIndex > 15 && this.getAttackStatus()) this.setAttackStatus(false);
-
+            if(this.curIconIndex == attackL && !this.getAttackStatus()) this.setAttackStatus(true);
+            if(this.curIconIndex <attackL && this.curIconIndex > attackR && this.getAttackStatus()) this.setAttackStatus(false);
+            if(kind == 1 && curIconIndex == 10){
+                newSoldierRand();
+            }
             if(this.curIconIndex>=this.iconList.size()){
                 this.curIconIndex = 0;
             }
@@ -101,7 +100,13 @@ public class Boss extends ElementObj {
             }
         }
     }
-
+    private void newSoldierRand(){
+        Random random = new Random();
+        int i = random.nextInt(3);
+        HJDTEnemy enemy = (HJDTEnemy) new HJDTEnemy().createElement("800,"+i+",2");
+        enemy.setNoticeDistance(1200);
+        em.addElement(enemy, GameElement.ENEMY);
+    }
     @Override
     public void bePk(GameElement tar, ElementObj b) {
         if(tar == GameElement.PLAYFIRE || tar == GameElement.DIEFIRE){
@@ -117,11 +122,19 @@ public class Boss extends ElementObj {
 
     @Override
     protected void move(long gameTime) {
-        if(this.status && this.curIconIndex>= 7 && this.curIconIndex<= 13){
+        if(kind==2){
+            if(getAttackStatus()){
+                if(this.direction){
+                    this.setX(this.getX()-5);
+                }else {
+                    this.setX(this.getX()+5);
+                }
+            }
+        }else {
             if(this.direction){
-                this.setX(this.getX()-5);
+                this.setX(this.getX()-1);
             }else {
-                this.setX(this.getX()+5);
+                this.setX(this.getX()+1);
             }
         }
     }
@@ -155,7 +168,8 @@ public class Boss extends ElementObj {
         Image img = image.getImage();
         int width = img.getWidth(null);
         int height = img.getHeight(null);
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//        System.out.println(image);
+        BufferedImage bufferedImage = new BufferedImage(image.getIconWidth(), image.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = bufferedImage.createGraphics();
         g.drawImage(img, 0, 0, width, height, width, 0, 0, height, null);
         g.dispose();

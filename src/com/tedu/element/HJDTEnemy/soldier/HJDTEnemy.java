@@ -380,4 +380,7 @@ public class HJDTEnemy extends ElementObj {
         this.status = status;
     }
 
+    public void setNoticeDistance(int noticeDistance) {
+        this.noticeDistance = noticeDistance;
+    }
 }

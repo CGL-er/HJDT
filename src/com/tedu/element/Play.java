@@ -24,7 +24,7 @@ public class Play extends ElementObj{
      */
     private int speed=3;
     private int groundHeight=435;
-    private int jumpSpeed = 5;
+    private int jumpSpeed = 4;
 
     private int jumpHeight = 150;
 
@@ -244,13 +244,25 @@ public class Play extends ElementObj{
             mapBias = 0;
             bias = 3;
         }
-        if(this.left && curX>GameJFrame.contentWidth*0.1)
+        if(this.left && curX>GameJFrame.contentWidth*0.03)
             this.setX(curX-speed);
-        if(this.left && curX<=GameJFrame.contentWidth*0.1){
+        if(this.left && curX<=GameJFrame.contentWidth*0.03){
             ElementObj tmap = em.getElementsByKey(GameElement.MAPBG).get(0);
             if (tmap.getX() > 0){
                 tmap.setX(tmap.getX()-speed);
                 for(ElementObj i:em.getElementsByKey(GameElement.ENEMY)){
+                    i.setX(i.getX()+speed+bias);
+                }
+                for(ElementObj i:em.getElementsByKey(GameElement.ENEMYFIRE)){
+                    i.setX(i.getX()+speed-bias);
+                }
+                for(ElementObj i:em.getElementsByKey(GameElement.BOSS)){
+                    i.setX(i.getX()+speed+bias);
+                }
+                for(ElementObj i:em.getElementsByKey(GameElement.DIE)){
+                    i.setX(i.getX()+speed+bias);
+                }
+                for(ElementObj i:em.getElementsByKey(GameElement.PLANE)){
                     i.setX(i.getX()+speed+bias);
                 }
             }
@@ -271,6 +283,9 @@ public class Play extends ElementObj{
                     i.setX(i.getX()-speed-bias);
                 }
                 for(ElementObj i:em.getElementsByKey(GameElement.DIE)){
+                    i.setX(i.getX()-speed-bias);
+                }
+                for(ElementObj i:em.getElementsByKey(GameElement.PLANE)){
                     i.setX(i.getX()-speed-bias);
                 }
 //                System.out.println(tmap.getX());
@@ -378,6 +393,7 @@ public class Play extends ElementObj{
             switchState();
         }
         if(!this.pkType || noFire){ // 如果不是发射状态，返回
+            switchState();
             return;
         }
         curIndex = -1;
@@ -421,6 +437,7 @@ public class Play extends ElementObj{
         this.setY(groundHeight-getH());
         this.upState = Action.valueOf(split[2]);
         this.lowState = Action.valueOf(split[3]);
+        this.speed = Integer.parseInt(split[4]);
         this.upLen = GameLoad.imgMaps.get(upState).size();
         this.lowLen = GameLoad.imgMaps.get(lowState).size();
         this.setUpIcon(GameLoad.imgMaps.get(upState).get(0));

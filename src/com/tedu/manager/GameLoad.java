@@ -54,10 +54,7 @@ public class GameLoad {
             Set<Object> set = pro.keySet();
             for(Object o:set){
                 String url = pro.getProperty(o.toString());
-                System.out.println(o);
                 imgMaps.put(Action.valueOf(o.toString()), loadImagesFromFolder(url));
-                System.out.println(o);
-                System.out.println(loadImagesFromFolder(url));
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -71,7 +68,7 @@ public class GameLoad {
             File[] files = folder.listFiles();
 
             if (files != null) {
-                Arrays.sort(files, Comparator.comparing(File::getName));
+                Arrays.sort(files, Comparator.comparingInt(file -> Integer.parseInt(file.getName().replaceAll("\\D+", ""))));
                 for (File file : files) {
                     if (file.isFile()) {
                         String path = folderPath+"/"+file.getName();
@@ -157,7 +154,6 @@ public class GameLoad {
             for(Object o:set){
                 String url = pro.getProperty(o.toString());
                 String tclass = o.toString().split("_")[0];
-
                 ElementObj obj = getObj(tclass).createElement(url);
                 em.addElement(obj, GameElement.valueOf(tclass));
             }

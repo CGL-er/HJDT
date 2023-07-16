@@ -1,4 +1,4 @@
-PLAY_1=100,100,unfire_handgun_right_upper,stand_right_lower
+PLAY_1=100,100,unfire_handgun_right_upper,stand_right_lower,3
 ENEMY_1=800,0,2
 ENEMY_2=800,1,2
 ENEMY_3=800,2,2
@@ -43,6 +43,6 @@ ENEMY_37=2900,2,2
 ENEMY_38=2900,1,2
 ENEMY_39=2900,2,2
 
-BOSS_1=3200
+BOSS_1=1,4000
 
 #PLAY_1=500,500,up_P1,0,0,0,0

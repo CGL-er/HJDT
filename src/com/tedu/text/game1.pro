@@ -1,4 +1,6 @@
-PLAY_1=100,100,unfire_handgun_right_upper,stand_right_lower
+PLAY_1=100,100,unfire_handgun_right_upper,stand_right_lower,3
+
+
 ENEMY_1=800,0,2
 ENEMY_2=800,1,2
 ENEMY_3=800,2,2
@@ -15,6 +17,16 @@ ENEMY_12=1600,0,2
 ENEMY_13=1600,1,2
 ENEMY_14=1600,2,2
 ENEMY_15=1600,0,2
+
+ENEMY_16=2000,0,2
+ENEMY_17=2000,1,2
+ENEMY_18=2000,2,2
+ENEMY_19=2000,0,2
+ENEMY_20=2000,1,2
+ENEMY_21=2000,2,2
+ENEMY_22=2000,0,2
+
+BOSS_1=2,4000
 
 
 #PLAY_1=500,500,up_P1,0,0,0,0

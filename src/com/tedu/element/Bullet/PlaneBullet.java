@@ -1,11 +1,14 @@
 package com.tedu.element.Bullet;
 
+import com.tedu.element.Action;
 import com.tedu.element.ElementObj;
 import com.tedu.manager.GameElement;
+import com.tedu.manager.GameLoad;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaneBullet extends ElementObj{
     private int speed = 10;
@@ -15,31 +18,14 @@ public class PlaneBullet extends ElementObj{
     private boolean isDead = false;
     private boolean Boomed = false;
     private static ArrayList<ImageIcon> imageIcons = new ArrayList<>();
-    private static ArrayList<ImageIcon> deadIcons = new ArrayList<>();
+
+    private List<ImageIcon> deadIcons;
     ImageIcon deadIcon = new ImageIcon("image/boom/boom.png");
     static {
         imageIcons.add(new ImageIcon("image/bullet/plane_bomb0.png"));
         imageIcons.add(new ImageIcon("image/bullet/plane_bomb1.png"));
         imageIcons.add(new ImageIcon("image/bullet/plane_bomb2.png"));
         imageIcons.add(new ImageIcon("image/bullet/plane_bomb3.png"));
-
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang0.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang1.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang2.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang3.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang4.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang5.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang6.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang7.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang8.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang9.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang10.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang11.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang12.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang13.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang14.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang15.png"));
-        deadIcons.add(new ImageIcon("image/boom/bomb_bang16.png"));
     }
 
     @Override
@@ -59,6 +45,7 @@ public class PlaneBullet extends ElementObj{
     }
     @Override
     public ElementObj createElement(String str) {
+        deadIcons = GameLoad.imgMaps.get(Action.enemy_bang);
         String str1[] = str.split(",");
         for(int i = 0;i<str1.length;i++){
             String str2[] = str1[i].split(":");
